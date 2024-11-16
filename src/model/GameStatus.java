@@ -153,7 +153,24 @@ public class GameStatus {
         this.supplyCap = supplyCap;
     }
 
+    @Override
     public String toString() {
-        return "Das sind unsere Mineralien: " + getMinerals();
+        return "#########################################################################################################" + "\n" +
+                "Iteration: " + iteration + "\n" +
+                "Workers: " + workers + "\n" +
+                "Idle Workers: " + idleWorkers + "\n" +
+                "Mineralien: " + minerals + "\n" +
+                "Gas: " + gas + "\n" +
+                "Cannons: " + cannons + "\n" +
+                "Pylons: " + pylons + "\n" +
+                "Nexus: " + nexus + "\n" +
+                "Gateways: " + gateways + "\n" +
+                "Cybernetics Cores: " + cyberneticsCores + "\n" +
+                "Stargates: " + stargates + "\n" +
+                "Voidrays: " + voidrays + "\n" +
+                "Supply Used: " + supplyUsed + "\n" +
+                "Supply Cap: " + supplyCap + "\n" +
+                "##############################################################################################################";
     }
+
 }

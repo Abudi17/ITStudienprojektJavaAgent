@@ -22,23 +22,12 @@ public class Main {
 
                     String jsonRequest;
                     while ((jsonRequest = in.readLine()) != null) {
-                        //System.out.println("Empfangen: " + jsonRequest);
-
                         Gson gson = new Gson();
-                        RequestPythonAgent request = gson.fromJson(jsonRequest, RequestPythonAgent.class);
-                        //System.out.println("JSON: " + request);
 
+                        // JSON direkt in GameStatus-Objekt deserialisieren
+                        GameStatus gameStatus = gson.fromJson(jsonRequest, GameStatus.class);
 
-
-                        Request requestNew = gson.fromJson(jsonRequest, Request.class);
-
-                        System.out.println("DAS IST UNSERE REQUESTNEW: " + requestNew );
-
-                        //CBR AUFURF
-
-                        GameStatus player = requestNew.getGameStatus();
-
-                        System.out.println(player);
+                        System.out.println(gameStatus);
                         //jtf.setText(jtf.getText() + "\nExecuting retrieval...2");
                         //Thread.sleep(5000);
                         /*
