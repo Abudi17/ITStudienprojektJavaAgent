@@ -1,6 +1,9 @@
 import java.io.*;
 import java.net.*;
 import com.google.gson.*;
+import model.GameStatus;
+import model.Request;
+import model.Response;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,22 +22,41 @@ public class Main {
 
                     String jsonRequest;
                     while ((jsonRequest = in.readLine()) != null) {
-                        System.out.println("Empfangen: " + jsonRequest);
+                        //System.out.println("Empfangen: " + jsonRequest);
 
                         Gson gson = new Gson();
-                        Request request = gson.fromJson(jsonRequest, Request.class);
-                        System.out.println("JSON: " + request);
+                        RequestPythonAgent request = gson.fromJson(jsonRequest, RequestPythonAgent.class);
+                        //System.out.println("JSON: " + request);
+
+
+
+                        Request requestNew = gson.fromJson(jsonRequest, Request.class);
+
+                        System.out.println("DAS IST UNSERE REQUESTNEW: " + requestNew );
 
                         //CBR AUFURF
+
+                        GameStatus player = requestNew.getGameStatus();
+
+                        System.out.println(player);
+                        //jtf.setText(jtf.getText() + "\nExecuting retrieval...2");
+                        //Thread.sleep(5000);
+                        /*
+                        handlePlayerCaseBase(player);
+                        //jtf.setText(jtf.getText() + "\nExecuting retrieval...3");
+
+                        Response response = engine.executeRetrieval(request);
                         // CBR ANTWORT
 
+                         */
+
                         // Beispiel-Antwort erstellen
-                        Response response = new Response("ok");
-                        String jsonResponse = gson.toJson(response);
+                        //Response response = new Response();
+                       // String jsonResponse = gson.toJson(response);
 
                         // Antwort senden
-                        out.println(jsonResponse);
-                        System.out.println("Antwort gesendet: " + jsonResponse);
+                        //out.println(jsonResponse);
+                        //System.out.println("Antwort gesendet: " + jsonResponse);
                     }
                 } catch (IOException e) {
                     System.out.println("I/O Fehler: " + e.getMessage());
@@ -47,11 +69,11 @@ public class Main {
     }
 }
 
-class Request {
+class RequestPythonAgent {
     private String message;
     private long timestamp;
 
-    public Request(String message, long timestamp) {
+    public RequestPythonAgent(String message, long timestamp) {
         this.message = message;
         this.timestamp = timestamp;
     }
@@ -73,10 +95,10 @@ class Request {
     }
 }
 
-class Response {
+class ResponsePythonAgent {
     private String status;
 
-    public Response(String status) {
+    public ResponsePythonAgent(String status) {
         this.status = status;
     }
 

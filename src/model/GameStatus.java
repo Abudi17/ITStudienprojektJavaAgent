@@ -152,4 +152,8 @@ public class GameStatus {
     public void setSupplyCap(int supplyCap) {
         this.supplyCap = supplyCap;
     }
+
+    public String toString() {
+        return "Das sind unsere Mineralien: " + getMinerals();
+    }
 }
