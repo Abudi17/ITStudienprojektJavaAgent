@@ -1,13 +1,20 @@
 import java.io.*;
 import java.net.*;
+
+import cbr_util.CBREngine;
 import com.google.gson.*;
 import model.GameStatus;
 import model.Request;
 import model.Response;
 
 public class Main {
+
     public static void main(String[] args) {
         int portNumber = 65432;
+
+        // Instanz von CBREngine erstellen (URL des myCBR-Servers anpassen)
+        CBREngine cbrEngine = new CBREngine("http://<mycbr-server-url>");
+
 
         try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
             System.out.println("Server läuft auf Port " + portNumber);
@@ -26,26 +33,24 @@ public class Main {
 
                         // JSON direkt in GameStatus-Objekt deserialisieren
                         GameStatus gameStatus = gson.fromJson(jsonRequest, GameStatus.class);
+                        System.out.println("Empfangener Spielstatus: " + gameStatus);
 
-                        System.out.println(gameStatus);
-                        //jtf.setText(jtf.getText() + "\nExecuting retrieval...2");
-                        //Thread.sleep(5000);
-                        /*
-                        handlePlayerCaseBase(player);
-                        //jtf.setText(jtf.getText() + "\nExecuting retrieval...3");
+// Anfrage an den CBR-Server senden
+                        String requestData = gameStatus.toString(); // Wenn nötig, nutze eine Methode im RetrievalHelper zur Formatierung
+                        String cbrResponse = cbrEngine.retrieveCase(requestData);
 
-                        Response response = engine.executeRetrieval(request);
-                        // CBR ANTWORT
+// Verarbeitung der Antwort (optional, falls eine spezifische Logik nötig ist)
+// RetrievalHelper.processResponse(cbrResponse);
 
-                         */
+// Beispielantwort an den Client zurücksenden
+                        ResponsePythonAgent response = new ResponsePythonAgent("CBR-Antwort verarbeitet");
+                        String jsonResponse = gson.toJson(response);
 
-                        // Beispiel-Antwort erstellen
-                        //Response response = new Response();
-                       // String jsonResponse = gson.toJson(response);
+// Antwort senden
+                        out.println(jsonResponse);
+                        System.out.println("Antwort gesendet: " + jsonResponse);
 
-                        // Antwort senden
-                        //out.println(jsonResponse);
-                        //System.out.println("Antwort gesendet: " + jsonResponse);
+
                     }
                 } catch (IOException e) {
                     System.out.println("I/O Fehler: " + e.getMessage());
