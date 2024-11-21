@@ -1,20 +1,23 @@
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import cbr_util.CBREngine;
 import com.google.gson.*;
+import de.dfki.mycbr.util.Pair;
+import de.dfki.mycbr.core.casebase.Instance;
+import de.dfki.mycbr.core.similarity.Similarity;
 import model.GameStatus;
-import model.Request;
-import model.Response;
 
 public class Main {
 
     public static void main(String[] args) {
         int portNumber = 65432;
 
-        // Instanz von CBREngine erstellen (URL des myCBR-Servers anpassen)
-        CBREngine cbrEngine = new CBREngine("http://<mycbr-server-url>");
-
+        // Singleton-Instanz von CBREngine abrufen
+        CBREngine cbrEngine = CBREngine.getInstance();
 
         try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
             System.out.println("Server läuft auf Port " + portNumber);
@@ -31,26 +34,27 @@ public class Main {
                     while ((jsonRequest = in.readLine()) != null) {
                         Gson gson = new Gson();
 
-                        // JSON direkt in GameStatus-Objekt deserialisieren
+                        // JSON in GameStatus-Objekt deserialisieren
                         GameStatus gameStatus = gson.fromJson(jsonRequest, GameStatus.class);
                         System.out.println("Empfangener Spielstatus: " + gameStatus);
 
-// Anfrage an den CBR-Server senden
-                        String requestData = gameStatus.toString(); // Wenn nötig, nutze eine Methode im RetrievalHelper zur Formatierung
-                        String cbrResponse = cbrEngine.retrieveCase(requestData);
+                        // Abfrage erstellen
+                        Map<String, String> queryAttributes = extractAttributesFromGameStatus(gameStatus);
 
-// Verarbeitung der Antwort (optional, falls eine spezifische Logik nötig ist)
-// RetrievalHelper.processResponse(cbrResponse);
+                        // Anfrage an CBREngine senden
+                        List<Pair<Instance, Similarity>> results = cbrEngine.retrieveCases(queryAttributes);
 
-// Beispielantwort an den Client zurücksenden
-                        ResponsePythonAgent response = new ResponsePythonAgent("CBR-Antwort verarbeitet");
-                        String jsonResponse = gson.toJson(response);
+                        // Antwort formatieren
+                        StringBuilder responseBuilder = new StringBuilder("Ähnlichste Fälle:\n");
+                        for (Pair<Instance, Similarity> result : results) {
+                            responseBuilder.append("Fall: ").append(result.getFirst().getName())
+                                    .append(", Ähnlichkeit: ").append(result.getSecond().getValue()).append("\n");
+                        }
+                        String cbrResponse = responseBuilder.toString();
 
-// Antwort senden
-                        out.println(jsonResponse);
-                        System.out.println("Antwort gesendet: " + jsonResponse);
-
-
+                        // Antwort senden
+                        out.println(cbrResponse);
+                        System.out.println("Antwort gesendet: " + cbrResponse);
                     }
                 } catch (IOException e) {
                     System.out.println("I/O Fehler: " + e.getMessage());
@@ -61,42 +65,21 @@ public class Main {
             System.out.println("Fehler beim Starten des Servers: " + e.getMessage());
         }
     }
-}
 
-class RequestPythonAgent {
-    private String message;
-    private long timestamp;
+    /**
+     * Extrahiert die Attribut-Werte-Paare aus dem GameStatus-Objekt.
+     *
+     * @param gameStatus Der empfangene Spielstatus.
+     * @return Map mit Attributnamen und -werten.
+     */
+    private static Map<String, String> extractAttributesFromGameStatus(GameStatus gameStatus) {
+        Map<String, String> attributes = new HashMap<>();
 
-    public RequestPythonAgent(String message, long timestamp) {
-        this.message = message;
-        this.timestamp = timestamp;
-    }
+        // Beispiel: Extraktion von Attributen (Passe dies an deine tatsächlichen Felder an)
+        attributes.put("Attribut1", gameStatus.toString());
+        //attributes.put("Attribut2", gameStatus.toString());
+        // Füge weitere Attribute hinzu, je nach GameStatus-Feldern
 
-    public String getMessage() {
-        return message;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    @Override
-    public String toString() {
-        return "Request{" +
-                "message='" + message + '\'' +
-                ", timestamp=" + timestamp +
-                '}';
-    }
-}
-
-class ResponsePythonAgent {
-    private String status;
-
-    public ResponsePythonAgent(String status) {
-        this.status = status;
-    }
-
-    public String getStatus() {
-        return status;
+        return attributes;
     }
 }
