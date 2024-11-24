@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class CBREngine {
     private static final String APPLICATION_NAME = "myCBRApplication";
-    private static final String PROJECT_NAME = "Starkraft2.prj"; // Name der .prj-Datei
+    private static final String PROJECT_NAME = "StarCraft2.prj"; // Name der .prj-Datei
     private static final String CONCEPT_NAME = "Ressourcenentscheidungen"; // Name des Hauptkonzepts in der .prj-Datei
 
     private Project cbrProject;
@@ -37,7 +37,7 @@ public class CBREngine {
         try {
             // Pfad zur .prj-Datei dynamisch erstellen
             // Absoluten Pfad zur .prj-Datei angeben
-            String projectPath = "C:\\Jan\\Universität\\Master\\IT-Studienprojekt\\SpeichernvonMyCBRDaten\\StarKraft2.prj";
+            String projectPath = "C:\\Jan\\Universität\\Master\\IT-Studienprojekt\\SpeichernvonMyCBRDaten\\StarCraft2.prj";
 
             // Projekt laden
             cbrProject = new Project(projectPath).getProject();
