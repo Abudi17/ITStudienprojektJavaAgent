@@ -54,7 +54,7 @@ public class Main {
 
                         // Antwort senden
                         out.println(cbrResponse);
-                        System.out.println("Antwort gesendet: " + cbrResponse);
+                        System.out.println(cbrResponse);
                     }
                 } catch (IOException e) {
                     System.out.println("I/O Fehler: " + e.getMessage());
