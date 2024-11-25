@@ -18,7 +18,6 @@ public class GameStatus {
 
     // Leerer Konstruktur für Default Werte
     public GameStatus(){
-
     }
 
     // Konstruktor, der alle Felder initialisiert

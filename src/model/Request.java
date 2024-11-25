@@ -46,7 +46,7 @@ public class Request {
 
     @Override
     public String toString() {
-        return "Request [gameStatus=" + gameStatus.toString() + " Mineralien: " +gameStatus.getMinerals() + "]";
+        return "Request [gameStatus=" + gameStatus.toString();
     }
 }
 

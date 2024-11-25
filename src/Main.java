@@ -20,7 +20,6 @@ public class Main {
         CBREngine cbrEngine = CBREngine.getInstance();
 
         try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
-            System.out.println("Server läuft auf Port " + portNumber);
 
             while (true) {
                 try (
@@ -76,9 +75,11 @@ public class Main {
         Map<String, String> attributes = new HashMap<>();
 
         // Beispiel: Extraktion von Attributen (Passe dies an deine tatsächlichen Felder an)
-        attributes.put("Mineralien", String.valueOf(gameStatus.getMinerals()));
+        //attributes.put("Mineralien", String.valueOf(gameStatus.getMinerals()));
         //attributes.put("Attribut2", gameStatus.toString());
-        // Füge weitere Attribute hinzu, je nach GameStatus-Feldern
+
+        // Füge weitere Attribute hinzu, je nach GameStatus-Feldern (aktuell ist es eine leere liste
+
         System.out.println(attributes);
         return attributes;
     }
