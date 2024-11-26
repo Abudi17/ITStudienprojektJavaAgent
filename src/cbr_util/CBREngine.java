@@ -156,7 +156,6 @@ public class CBREngine {
             return new ArrayList<>(caseBase.getCases().stream().toList());
         } catch (Exception e) {
             System.out.println("Fehler beim Abrufen der Instanzen: " + e.getMessage());
-            e.printStackTrace();
             return new ArrayList<>();
         }
     }

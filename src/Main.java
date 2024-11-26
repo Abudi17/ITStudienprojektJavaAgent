@@ -10,6 +10,7 @@ import de.dfki.mycbr.util.Pair;
 import de.dfki.mycbr.core.casebase.Instance;
 import de.dfki.mycbr.core.similarity.Similarity;
 import model.GameStatus;
+import model.Response;
 
 public class Main {
 
@@ -22,10 +23,9 @@ public class Main {
         try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
 
             while (true) {
-                try (
-                        Socket clientSocket = serverSocket.accept();
-                        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                try (Socket clientSocket = serverSocket.accept();
+                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
                 ) {
                     System.out.println("Verbunden mit " + clientSocket.getRemoteSocketAddress());
 
@@ -43,17 +43,12 @@ public class Main {
                         // Anfrage an CBREngine senden
                         List<Pair<Instance, Similarity>> results = cbrEngine.retrieveCases(queryAttributes);
 
-                        // Antwort formatieren
-                        StringBuilder responseBuilder = new StringBuilder("Ähnlichste Fälle:\n");
-                        for (Pair<Instance, Similarity> result : results) {
-                            responseBuilder.append("Fall: ").append(result.getFirst().getName())
-                                    .append(", Ähnlichkeit: ").append(result.getSecond().getValue()).append("\n");
-                        }
-                        String cbrResponse = responseBuilder.toString();
+                        // Neue Response-Instanz erstellen
+                        Response responseHandler = new Response(out);
 
-                        // Antwort senden
-                        out.println(cbrResponse);
-                        System.out.println(cbrResponse);
+                        // Antwort formatieren und senden
+                        String cbrResponse = responseHandler.formatResponse(results);
+                        responseHandler.sendResponse(cbrResponse);
                     }
                 } catch (IOException e) {
                     System.out.println("I/O Fehler: " + e.getMessage());
@@ -75,11 +70,10 @@ public class Main {
         Map<String, String> attributes = new HashMap<>();
 
         // Beispiel: Extraktion von Attributen (Passe dies an deine tatsächlichen Felder an)
-        //attributes.put("Mineralien", String.valueOf(gameStatus.getMinerals()));
-        //attributes.put("Attribut2", gameStatus.toString());
+        // attributes.put("Mineralien", String.valueOf(gameStatus.getMinerals()));
+        // attributes.put("Attribut2", gameStatus.toString());
 
-        // Füge weitere Attribute hinzu, je nach GameStatus-Feldern (aktuell ist es eine leere liste
-
+        // Füge weitere Attribute hinzu, je nach GameStatus-Feldern
         System.out.println(attributes);
         return attributes;
     }

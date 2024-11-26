@@ -17,7 +17,7 @@ public class GameStatus {
     private int supplyCap;
 
     // Leerer Konstruktur für Default Werte
-    public GameStatus(){
+    public GameStatus() {
     }
 
     // Konstruktor, der alle Felder initialisiert

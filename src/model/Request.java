@@ -18,8 +18,7 @@ public class Request {
     /**
      * Konstruktor zur Erzeugung eines Request-Objekts.
      *
-     * @param gameStatus
-     *            Der Spielstatus, in dem sich der anfragende Spieler befindet.
+     * @param gameStatus Der Spielstatus, in dem sich der anfragende Spieler befindet.
      */
     public Request(GameStatus gameStatus) {
         this.gameStatus = gameStatus;
@@ -28,8 +27,7 @@ public class Request {
     /**
      * Simpler Setter für den Spielstatus.
      *
-     * @param gameStatus
-     *            Der neue Spielstatus.
+     * @param gameStatus Der neue Spielstatus.
      */
     public void setGameStatus(GameStatus gameStatus) {
         this.gameStatus = gameStatus;
