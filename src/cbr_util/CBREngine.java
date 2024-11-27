@@ -11,130 +11,137 @@ import de.dfki.mycbr.core.retrieval.Retrieval.RetrievalMethod;
 import de.dfki.mycbr.core.similarity.Similarity;
 import de.dfki.mycbr.util.Pair;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CBREngine {
-    private static final String APPLICATION_NAME = "myCBRApplication";
-    private static final String PROJECT_NAME = "StarCraft2.prj"; // Name der .prj-Datei
-    private static final String CONCEPT_NAME = "Ressourcenentscheidungen"; // Name des Hauptkonzepts in der .prj-Datei
-
+    private static CBREngine instance;
     private Project cbrProject;
     private Concept statusConcept;
     private DefaultCaseBase caseBase;
 
     /**
-     * Singleton-Instanz der CBREngine.
+     * Absoluter Pfad zur Projektdatei (.prj)
      */
-    private static CBREngine instance;
+    private static final String PROJECT_PATH = "C:\\Jan\\Universität\\Master\\IT-Studienprojekt\\SpeichernvonMyCBRDaten\\StarCraft2.prj";
 
     /**
-     * Privater Konstruktor zur Initialisierung der CBREngine.
+     * Name des Hauptkonzepts im Projekt.
+     */
+    private static final String CONCEPT_NAME = "Ressourcenentscheidungen";
+
+    /**
+     * Privater Konstruktor für das Singleton-Pattern.
      */
     private CBREngine() {
+    }
+
+    /**
+     * Singleton-Instanz abrufen.
+     */
+    public static CBREngine getInstance() {
+        if (instance == null) {
+            synchronized (CBREngine.class) {
+                if (instance == null) {
+                    instance = new CBREngine();
+                }
+            }
+        }
+        return instance;
+    }
+
+    /**
+     * Initialisiert das CBR-Projekt. Nutzt den festgelegten Projektpfad und Konzeptnamen.
+     */
+    public void init() {
         try {
-            // Pfad zur .prj-Datei dynamisch erstellen
-            // Absoluten Pfad zur .prj-Datei angeben
-            String projectPath = "C:\\Jan\\Universität\\Master\\IT-Studienprojekt\\SpeichernvonMyCBRDaten\\StarCraft2.prj";
-
-            // Projekt laden
-            cbrProject = new Project(projectPath).getProject();
-
-
-            // Projekt laden
-            cbrProject = new Project(projectPath);
+            System.out.println("Lade myCBR-Projekt von: " + PROJECT_PATH);
+            cbrProject = new Project(PROJECT_PATH);
 
             // Warten, bis das Projekt vollständig geladen ist
             while (cbrProject.isImporting()) {
                 Thread.sleep(200);
             }
 
-            // Hauptkonzept aus der .prj-Datei abrufen
-            statusConcept = cbrProject.getConceptByID(CONCEPT_NAME);
+            System.out.println("Projekt erfolgreich geladen.");
 
+            // Hauptkonzept abrufen
+            statusConcept = cbrProject.getConceptByID(CONCEPT_NAME);
             if (statusConcept == null) {
-                throw new IllegalArgumentException("Das Hauptkonzept '" + CONCEPT_NAME + "' wurde nicht gefunden.");
+                throw new IllegalArgumentException("Das Konzept '" + CONCEPT_NAME + "' wurde nicht gefunden.");
             }
 
-            // Standard-Fallbasis laden
-            ICaseBase base = cbrProject.getCaseBases().get(cbrProject.getCaseBases().keySet().iterator().next());
+            // Fallbasis abrufen
+            ICaseBase base = cbrProject.getCaseBases().values().stream().findFirst().orElse(null);
             if (base instanceof DefaultCaseBase) {
                 caseBase = (DefaultCaseBase) base;
             } else {
                 throw new IllegalArgumentException("Keine gültige Standard-Fallbasis gefunden.");
             }
 
+            System.out.println("CBREngine erfolgreich initialisiert.");
+
         } catch (Exception e) {
-            System.out.println("Fehler beim Laden des CBR-Systems: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Fehler beim Initialisieren der CBREngine: " + e.getMessage());
         }
     }
 
     /**
-     * Gibt die Singleton-Instanz der CBREngine zurück.
+     * Führt eine Abfrage basierend auf den angegebenen Attributen aus.
      *
-     * @return Instanz der CBREngine.
-     */
-    public static CBREngine getInstance() {
-        if (instance == null) {
-            instance = new CBREngine();
-        }
-        return instance;
-    }
-
-    /**
-     * Führt den Retrieve-Prozess mit einer gegebenen Anfrage aus.
-     *
-     * @param queryAttributes Die Attributwerte für die Abfrage (Attributname und -wert).
-     * @return Liste der ähnlichsten Fälle.
+     * @param queryAttributes Map mit Attributnamen und -werten.
+     * @return Liste von Instanzen und ihren Ähnlichkeiten.
      */
     public List<Pair<Instance, Similarity>> retrieveCases(Map<String, String> queryAttributes) {
+        if (statusConcept == null || caseBase == null) {
+            throw new IllegalStateException("CBREngine wurde nicht initialisiert. Rufe init() auf.");
+        }
+
         List<Pair<Instance, Similarity>> results = new ArrayList<>();
         try {
-            // Neue Retrieval-Instanz erstellen
+            // Retrieval-Instanz erstellen
             Retrieval retrieval = new Retrieval(statusConcept, caseBase);
             retrieval.setRetrievalMethod(RetrievalMethod.RETRIEVE_SORTED);
 
-            // Query-Attribute setzen
+            // Abfrageinstanz mit Attributen füllen
             Instance queryInstance = retrieval.getQueryInstance();
+            List<String> ignoredAttributes = new ArrayList<>();
+
             for (Map.Entry<String, String> entry : queryAttributes.entrySet()) {
                 AttributeDesc attrDesc = statusConcept.getAllAttributeDescs().get(entry.getKey());
                 if (attrDesc != null) {
                     queryInstance.addAttribute(attrDesc, entry.getValue());
                 } else {
-                    System.out.println("Attribut '" + entry.getKey() + "' existiert nicht im Konzept.");
+                    ignoredAttributes.add(entry.getKey());
                 }
+            }
+
+            if (!ignoredAttributes.isEmpty()) {
+                System.out.println("Warnung: Folgende Attribute wurden ignoriert, da sie nicht im Konzept existieren: " + ignoredAttributes);
             }
 
             // Retrieval ausführen
             retrieval.start();
             results = retrieval.getResult();
 
+            System.out.println("Retrieval erfolgreich abgeschlossen. Gefundene Fälle: " + results.size());
+
         } catch (Exception e) {
-            System.out.println("Fehler beim Retrieval-Prozess: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Fehler beim Retrieval: " + e.getMessage());
         }
+
         return results;
     }
 
     /**
-     * Gibt die Standard-Fallbasis zurück.
+     * Gibt alle Instanzen aus der Fallbasis zurück.
      *
-     * @return Fallbasis.
+     * @return Liste der Instanzen.
      */
-    public DefaultCaseBase getCaseBase() {
-        return caseBase;
-    }
-
-    /**
-     * Setzt das Hauptkonzept für die CBREngine.
-     *
-     * @param concept Hauptkonzept des Projekts.
-     */
-    public void setStatusConcept(Concept concept) {
-        this.statusConcept = concept;
+    public List<Instance> getAllInstances() {
+        if (caseBase == null) {
+            throw new IllegalStateException("CBREngine wurde nicht initialisiert. Rufe init() auf.");
+        }
+        return new ArrayList<>(caseBase.getCases());
     }
 
     /**
@@ -143,20 +150,21 @@ public class CBREngine {
      * @return Hauptkonzept.
      */
     public Concept getMainConcept() {
-        return this.statusConcept;
+        return statusConcept;
     }
 
     /**
-     * Gibt die verfügbaren Instanzen in der Fallbasis zurück.
+     * Setzt das Hauptkonzept der CBREngine.
      *
-     * @return Liste der Instanzen.
+     * @param conceptName Name des Konzepts.
      */
-    public List<Instance> getAllInstances() {
-        try {
-            return new ArrayList<>(caseBase.getCases().stream().toList());
-        } catch (Exception e) {
-            System.out.println("Fehler beim Abrufen der Instanzen: " + e.getMessage());
-            return new ArrayList<>();
+    public void setStatusConcept(String conceptName) {
+        Concept concept = cbrProject.getConceptByID(conceptName);
+        if (concept != null) {
+            this.statusConcept = concept;
+            System.out.println("Konzept '" + conceptName + "' erfolgreich gesetzt.");
+        } else {
+            throw new IllegalArgumentException("Konzept '" + conceptName + "' wurde nicht gefunden.");
         }
     }
 }

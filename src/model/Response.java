@@ -37,6 +37,6 @@ public class Response {
      */
     public void sendResponse(String response) {
         out.println(response);
-        System.out.println("Antwort gesendet: " + response);
+        System.out.println(response);
     }
 }
