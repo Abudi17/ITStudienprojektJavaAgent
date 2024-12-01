@@ -20,7 +20,7 @@ public class CBREngine {
     private DefaultCaseBase caseBase;
 
     /**
-     * Absoluter Pfad zur Projektdatei (.prj)
+     * Absoluter Pfad zur CBR-Projektdatei (.prj)
      */
     private static final String PROJECT_PATH = "C:\\Jan\\Universität\\Master\\IT-Studienprojekt\\SpeichernvonMyCBRDaten\\StarCraft2.prj";
 
