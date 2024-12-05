@@ -58,9 +58,6 @@ public class Main {
                     // Versuche, die Anfrage in ein GameStatus-Objekt zu deserialisieren
                     GameStatus gameStatus = gson.fromJson(jsonRequest, GameStatus.class);
 
-                    //Das hier ist für die andere ausgabe in der reihe .... braucht man eig. nicht
-                    //System.out.println("Empfangener Spielstatus: " + gameStatus);
-
                     // Abfrage der CBR-Engine mit den Attributen aus dem GameStatus
                     Map<String, String> queryAttributes = extractAttributesFromGameStatus(gameStatus);
 
