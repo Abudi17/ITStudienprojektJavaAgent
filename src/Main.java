@@ -1,23 +1,23 @@
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import cbr_util.CBREngine;
 import com.google.gson.*;
-import de.dfki.mycbr.util.Pair;
-import de.dfki.mycbr.core.casebase.Instance;
-import de.dfki.mycbr.core.similarity.Similarity;
 import model.GameStatus;
 import model.Response;
 
+/**
+ * Hauptklasse, die als Server für die Verarbeitung von CBR-Anfragen dient.
+ * Die Klasse akzeptiert Verbindungen von Clients, verarbeitet JSON-Anfragen und liefert die passenden Ergebnisse.
+ */
 public class Main {
 
     public static void main(String[] args) {
         int portNumber = 65432;
 
-        // Singleton-Instanz von CBREngine abrufen
+        // Singleton-Instanz von CBREngine abrufen und initialisieren
         CBREngine cbrEngine = CBREngine.getInstance();
         cbrEngine.init(); // Projekt wird automatisch mit dem angegebenen Pfad und Konzept geladen
 
@@ -33,7 +33,7 @@ public class Main {
                 new Thread(() -> handleClient(clientSocket, cbrEngine)).start();
             }
         } catch (IOException e) {
-            System.out.println("Fehler beim Starten des Servers: " + e.getMessage());
+            System.err.println("Fehler beim Starten des Servers: " + e.getMessage());
         }
     }
 
@@ -55,37 +55,51 @@ public class Main {
                 System.out.println("Empfangene Anfrage: " + jsonRequest);
 
                 try {
-                    // Versuche, die Anfrage in ein GameStatus-Objekt zu deserialisieren
+                    // JSON-Anfrage in GameStatus-Objekt umwandeln
                     GameStatus gameStatus = gson.fromJson(jsonRequest, GameStatus.class);
 
-                    // Abfrage der CBR-Engine mit den Attributen aus dem GameStatus
+                    // Abfrage-Attribute extrahieren
                     Map<String, String> queryAttributes = extractAttributesFromGameStatus(gameStatus);
 
-                    List<Pair<Instance, Similarity>> results = cbrEngine.retrieveCases(queryAttributes);
+                    // Fälle abrufen und kategorisieren
+                    Map<String, String> categorizedCases = cbrEngine.retrieveAndCategorizeCases(queryAttributes);
 
-                    // Response-Handler erstellen, um die Antwort zu formatieren und zurückzusenden
+                    // Antwort formatieren und senden
                     Response responseHandler = new Response(out);
-                    String cbrResponse = responseHandler.formatResponse(results);
-                    responseHandler.sendResponse(cbrResponse);
+                    responseHandler.sendResponse(formatCategorizedCases(categorizedCases));
 
                 } catch (JsonSyntaxException e) {
-                    // Fehler, falls die JSON-Anfrage ungültig ist
                     System.err.println("Fehlerhafte JSON-Anfrage: " + jsonRequest);
                     out.println("Ungültige Anfrage: Überprüfen Sie die JSON-Daten.");
                 }
             }
         } catch (IOException e) {
-            System.out.println("I/O Fehler bei " + clientSocket.getRemoteSocketAddress() + ": " + e.getMessage());
+            System.err.println("I/O Fehler bei " + clientSocket.getRemoteSocketAddress() + ": " + e.getMessage());
         } finally {
             try {
                 clientSocket.close();
                 System.out.println("Verbindung mit " + clientSocket.getRemoteSocketAddress() + " geschlossen.");
             } catch (IOException e) {
-                System.out.println("Fehler beim Schließen des Sockets: " + e.getMessage());
+                System.err.println("Fehler beim Schließen des Sockets: " + e.getMessage());
             }
         }
     }
 
+    /**
+     * Formatiert die kategorisierten Fälle in eine benutzerfreundliche Zeichenkette.
+     *
+     * @param categorizedCases Map mit Fallnamen und ihren Kategorien.
+     * @return Eine formatierte Zeichenkette mit den Fällen und ihren Kategorien.
+     */
+    private static String formatCategorizedCases(Map<String, String> categorizedCases) {
+        StringBuilder responseBuilder = new StringBuilder("Ähnlichste Fälle mit Kategorien:\n");
+        for (Map.Entry<String, String> entry : categorizedCases.entrySet()) {
+            responseBuilder.append("Fall: ").append(entry.getKey())
+                    .append(", Kategorie: ").append(entry.getValue())
+                    .append("\n");
+        }
+        return responseBuilder.toString();
+    }
 
     /**
      * Extrahiert die Attribut-Werte-Paare aus dem GameStatus-Objekt.
@@ -110,8 +124,6 @@ public class Main {
         attributes.put("Voidrays", validateAttribute(gameStatus.getVoidrays()));
         attributes.put("SupplyUsed", validateAttribute(gameStatus.getSupplyUsed()));
         attributes.put("SupplyCap", validateAttribute(gameStatus.getSupplyCap()));
-
-        // Weitere Attribute können hier hinzugefügt werden, je nach den Feldern im GameStatus
 
         // Ausgabe der extrahierten Attribute für Debugging-Zwecke
         System.out.println("Extrahierte Attribute: " + attributes);
