@@ -9,27 +9,29 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Hilfsklasse für die Verarbeitung von Retrieval-Ergebnissen aus einem CBR-System.
+ * Hilfsklasse für die Verarbeitung und Kategorisierung von Retrieval-Ergebnissen
+ * aus einem Case-Based Reasoning (CBR)-System.
  */
 public class RetrievalHelper {
 
     /**
-     * Kategorisiert die 5 ähnlichsten Fälle basierend auf ihrer Fallnummer.
+     * Kategorisiert die Top-5 ähnlichsten Fälle basierend auf ihren Fallnummern und deren Ähnlichkeitswerten.
      *
-     * @param results Liste der Ergebnisse aus dem Retrieval-Prozess, bestehend aus Fall-Instanzen und deren Ähnlichkeitswerten.
-     * @return Eine Map mit Fallnamen als Schlüssel und deren Kategorien als Werte.
+     * @param results Eine Liste von Ergebnissen aus dem Retrieval-Prozess, bestehend aus Fall-Instanzen
+     *                und ihren zugehörigen Ähnlichkeitswerten.
+     * @return Eine Map, in der die Fallnamen (als Schlüssel) ihren entsprechenden Kategorien (als Werte) zugeordnet sind.
      */
     public static Map<String, String> getCategorizedTopCases(List<Pair<Instance, Similarity>> results) {
-        // Sortiere die Ergebnisse nach Ähnlichkeit (absteigend)
+        // Sortiere die Ergebnisse basierend auf Ähnlichkeitswerten in absteigender Reihenfolge
         results.sort((p1, p2) -> Double.compare(p2.getSecond().getValue(), p1.getSecond().getValue()));
 
-        // Begrenze die Ergebnisse auf die Top-5
+        // Begrenze die Ergebnisse auf die Top-5 Einträge
         List<Pair<Instance, Similarity>> topResults = results.stream().limit(5).toList();
 
-        // Map zur Speicherung von Fallnamen und ihren Kategorien
+        // Map zur Speicherung der Zuordnung von Fallnamen und Kategorien
         Map<String, String> categorizedCases = new HashMap<>();
 
-        // Kategorisiere jeden der Top-5 Fälle
+        // Iteriere über die Top-5 Ergebnisse und kategorisiere die Fälle
         for (Pair<Instance, Similarity> result : topResults) {
             String caseName = result.getFirst().getName(); // Name der Fallinstanz
 
@@ -39,7 +41,7 @@ public class RetrievalHelper {
             // Bestimme die Kategorie basierend auf der Fallnummer
             String category = getCategoryFromCaseNumber(caseNumber);
 
-            // Füge die Zuordnung von Fallname und Kategorie in die Map ein
+            // Speichere die Zuordnung von Fallname und Kategorie in der Map
             categorizedCases.put(caseName, category);
         }
 
@@ -49,8 +51,14 @@ public class RetrievalHelper {
     /**
      * Extrahiert die Fallnummer aus dem Namen eines Falls.
      *
-     * @param caseName Der Name des Falls (z. B. "Fall 14").
-     * @return Die extrahierte Fallnummer als Integer oder -1, falls keine gültige Zahl gefunden wurde.
+     * <p>
+     * Beispiel:
+     * - Eingabe: "Fall 14" zu Ausgabe: 14
+     * - Eingabe: "Case XYZ" zu Ausgabe: -1 (falls keine Zahl gefunden wird)
+     * </p>
+     *
+     * @param caseName Der Name des Falls, aus dem die Nummer extrahiert werden soll (z. B. "Fall 14").
+     * @return Die extrahierte Fallnummer als Integer oder -1, falls keine gültige Zahl im Fallnamen gefunden wurde.
      */
     private static int extractCaseNumber(String caseName) {
         try {
@@ -65,8 +73,17 @@ public class RetrievalHelper {
     /**
      * Bestimmt die Kategorie eines Falls basierend auf dessen Fallnummer.
      *
+     * <p>
+     * Kategorien basieren auf festen Bereichen:
+     * - 1 bis 5: "Build"
+     * - 6 bis 10: "Troops"
+     * - 11 bis 15: "Attack"
+     * - 16 bis 20: "Defense"
+     * - Andere: "Unknown"
+     * </p>
+     *
      * @param caseNumber Die Fallnummer, die aus dem Fallnamen extrahiert wurde.
-     * @return Die entsprechende Kategorie (z. B. "Build", "Troops", "Attack", "Defense") oder "Unknown" für unklassifizierte Fälle.
+     * @return Die entsprechende Kategorie des Falls oder "Unknown" für unklassifizierte Fälle.
      */
     private static String getCategoryFromCaseNumber(int caseNumber) {
         if (caseNumber >= 1 && caseNumber <= 5) {

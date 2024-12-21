@@ -15,25 +15,37 @@ import java.util.*;
 
 /**
  * Singleton-Klasse zur Verwaltung des CBR-Systems.
- * Diese Klasse initialisiert das myCBR-Projekt, führt Retrievals durch und stellt die Ergebnisse bereit.
+ * Diese Klasse initialisiert das myCBR-Projekt, ermöglicht die Durchführung von Retrievals
+ * und bietet Methoden zur Verarbeitung der Ergebnisse.
  */
 public class CBREngine {
 
-    private static volatile CBREngine instance; // Singleton-Instanz
-    private Concept statusConcept; // Konzept, das die Abfragen definiert
-    private DefaultCaseBase caseBase; // Fallbasis des Projekts
+    /** Singleton-Instanz der CBREngine */
+    private static volatile CBREngine instance;
 
-    // Konstante für den Projektpfad und das zu verwendende Konzept
+    /** Das Hauptkonzept des myCBR-Projekts, auf dem die Abfragen basieren */
+    private Concept statusConcept;
+
+    /** Die Fallbasis (Case Base), die Fälle speichert und abfragt */
+    private DefaultCaseBase caseBase;
+
+    /** Pfad zur myCBR-Projektdatei */
     private static final String PROJECT_PATH = "C:\\Jan\\Universität\\Master\\IT-Studienprojekt\\SpeichernvonMyCBRDaten\\StarCraft2.prj";
+
+    /** Name des Hauptkonzepts im Projekt */
     private static final String CONCEPT_NAME = "Ressourcenentscheidungen";
 
-    // Privater Konstruktor für das Singleton-Pattern
+    /**
+     * Privater Konstruktor, um die Erstellung mehrerer Instanzen zu verhindern
+     * (Singleton-Pattern).
+     */
     private CBREngine() {}
 
     /**
      * Gibt die Singleton-Instanz der CBREngine zurück.
+     * Falls die Instanz noch nicht existiert, wird sie initialisiert.
      *
-     * @return die Singleton-Instanz.
+     * @return die Singleton-Instanz der CBREngine
      */
     public static CBREngine getInstance() {
         if (instance == null) {
@@ -47,19 +59,19 @@ public class CBREngine {
     }
 
     /**
-     * Initialisiert das myCBR-Projekt, das Konzept und die Fallbasis.
+     * Initialisiert das myCBR-Projekt, lädt das Hauptkonzept und die Standard-Fallbasis.
      */
     public void init() {
         try {
             System.out.println("Lade myCBR-Projekt von: " + PROJECT_PATH);
             Project cbrProject = new Project(PROJECT_PATH);
 
-            // Warte, bis der Import abgeschlossen ist
+            // Warte, bis der Projekt-Import abgeschlossen ist
             while (cbrProject.isImporting()) {
                 Thread.sleep(200);
             }
 
-            // Lade das Konzept basierend auf seinem Namen
+            // Lade das Hauptkonzept aus dem Projekt
             statusConcept = cbrProject.getConceptByID(CONCEPT_NAME);
             if (statusConcept == null) {
                 throw new IllegalArgumentException("Das Konzept '" + CONCEPT_NAME + "' wurde nicht gefunden.");
@@ -80,10 +92,10 @@ public class CBREngine {
     }
 
     /**
-     * Führt ein Retrieval basierend auf den übergebenen Attributen durch.
+     * Führt ein Retrieval basierend auf den angegebenen Attributen durch.
      *
-     * @param queryAttributes Map der Abfrage-Attribute (Attributname -> Attributwert).
-     * @return Eine Liste von Fällen mit ihren Ähnlichkeitswerten.
+     * @param queryAttributes Eine Map mit Attributnamen und zugehörigen Werten für die Abfrage
+     * @return Eine Liste von Fällen und deren Ähnlichkeitswerten
      */
     public List<Pair<Instance, Similarity>> retrieveCases(Map<String, String> queryAttributes) {
         if (statusConcept == null || caseBase == null) {
@@ -110,6 +122,7 @@ public class CBREngine {
                 }
             }
 
+            // Warnung für ignorierte Attribute
             if (!ignoredAttributes.isEmpty()) {
                 System.out.println("Warnung: Folgende Attribute wurden ignoriert, da sie nicht im Konzept existieren: " + ignoredAttributes);
             }
@@ -126,16 +139,16 @@ public class CBREngine {
     }
 
     /**
-     * Führt das Retrieval durch und gibt die Top 5 Fälle kategorisiert zurück.
+     * Führt ein Retrieval durch und gibt die Top 5 Ergebnisse kategorisiert zurück.
      *
-     * @param queryAttributes Map der Abfrage-Attribute (Attributname -> Attributwert).
-     * @return Map der 5 ähnlichsten Fälle mit ihren Kategorien.
+     * @param queryAttributes Eine Map mit Attributnamen und zugehörigen Werten für die Abfrage
+     * @return Eine Map der Top 5 Fälle (Fallname -> Kategorie)
      */
     public Map<String, String> retrieveAndCategorizeCases(Map<String, String> queryAttributes) {
         // Rufe die Ergebnisse des Retrievals ab
         List<Pair<Instance, Similarity>> results = retrieveCases(queryAttributes);
 
-        // Übergib die Ergebnisse an den RetrievalHelper
+        // Übergib die Ergebnisse an den RetrievalHelper zur Kategorisierung
         return RetrievalHelper.getCategorizedTopCases(results);
     }
 }

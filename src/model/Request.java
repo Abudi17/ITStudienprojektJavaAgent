@@ -1,50 +1,65 @@
 package model;
 
-public class Request {
+import com.google.gson.Gson;
+
+/**
+ * Die Request-Klasse kapselt eine Anfrage, die den aktuellen Spielstatus enthält.
+ * Sie ermöglicht die Erstellung einer Instanz aus einer JSON-Darstellung und
+ * überprüft die Gültigkeit der Anfrage.
+ * Die Klasse ist als `record` implementiert, was bedeutet, dass sie immutable ist
+ * und automatisch Konstruktor, Getter, `equals`, `hashCode` und `toString` generiert.
+ */
+public record Request(GameStatus gameStatus) {
 
     /**
-     * Der Spielstatus, in dem sich der Spieler befindet.
-     */
-    private GameStatus gameStatus;
-
-    /**
-     * Default-Konstruktor, der für die JSON Serialisierung und
-     * Deserialisierung benötigt wird.
-     */
-    public Request() {
-        this(new GameStatus());
-    }
-
-    /**
-     * Konstruktor zur Erzeugung eines Request-Objekts.
+     * Erstellt eine Request-Instanz aus einem flachen JSON-String.
      *
-     * @param gameStatus Der Spielstatus, in dem sich der anfragende Spieler befindet.
+     * @param flatJson JSON-Darstellung des GameStatus.
+     * @return Eine neue Request-Instanz.
+     * @throws IllegalArgumentException Wenn das JSON ungültig oder leer ist.
      */
-    public Request(GameStatus gameStatus) {
-        this.gameStatus = gameStatus;
+    public static Request fromFlatJson(String flatJson) {
+        // Überprüfung, ob der JSON-String null oder leer ist
+        if (flatJson == null || flatJson.isBlank()) {
+            throw new IllegalArgumentException("Eingabe-JSON darf nicht leer sein.");
+        }
+        try {
+            // Gson-Instanz für die JSON-Dekodierung
+            Gson gson = new Gson();
+            // JSON-String in ein GameStatus-Objekt konvertieren
+            GameStatus gameStatus = gson.fromJson(flatJson, GameStatus.class);
+            // Rückgabe einer neuen Request-Instanz mit dem dekodierten GameStatus
+            return new Request(gameStatus);
+        } catch (Exception e) {
+            // Fehlerbehandlung bei ungültigem JSON-Format
+            throw new IllegalArgumentException("Ungültiges JSON-Format: " + flatJson, e);
+        }
     }
 
     /**
-     * Simpler Setter für den Spielstatus.
+     * Überprüft, ob die Anfrage gültig ist.
+     * Die Gültigkeit hängt davon ab, ob der `gameStatus` nicht null ist
+     * und seine Attribute sinnvolle Werte haben.
      *
-     * @param gameStatus Der neue Spielstatus.
+     * @return true, wenn der gameStatus nicht null ist und valide Werte aufweist.
      */
-    public void setGameStatus(GameStatus gameStatus) {
-        this.gameStatus = gameStatus;
+    public boolean isValid() {
+        return gameStatus != null
+                && gameStatus.getWorkers() >= 0 // Arbeiteranzahl darf nicht negativ sein
+                && gameStatus.getMinerals() >= 0 // Mineralienanzahl darf nicht negativ sein
+                && gameStatus.getSupplyCap() >= gameStatus.getSupplyUsed(); // Versorgungslimit muss ausreichen
     }
 
     /**
-     * Simpler Getter für den Spielstatus.
+     * Gibt eine String-Repräsentation der Request zurück.
+     * Die Darstellung enthält den enthaltenen GameStatus.
      *
-     * @return Der aktuelle Spielstatus der Anfrage.
+     * @return String-Darstellung der Request.
      */
-    public GameStatus getGameStatus() {
-        return gameStatus;
-    }
-
     @Override
     public String toString() {
-        return "Request [gameStatus=" + gameStatus.toString();
+        return "Request{" +
+                "gameStatus=" + gameStatus +
+                '}';
     }
 }
-
