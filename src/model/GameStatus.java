@@ -214,4 +214,5 @@ public class GameStatus implements Serializable {
                 ", supplyCap=" + supplyCap +
                 '}';
     }
+
 }

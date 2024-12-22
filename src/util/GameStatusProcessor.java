@@ -17,38 +17,38 @@ public class GameStatusProcessor {
      * Die Attribute und ihre Werte werden in einer Map gespeichert, wobei die Attributnamen als Schlüssel
      * und die Werte als Strings vorliegen.
      *
-     * @param gameStatus Der empfangene Spielstatus.
-     * @return Eine Map mit Attributnamen und ihren entsprechenden Werten als Strings.
+     * @param gameStatus Der empfangene Spielstatus, dessen Attribute verarbeitet werden sollen.
+     * @return Eine Map mit Attributnamen (als Schlüssel) und ihren entsprechenden Werten (als Strings).
      */
     public static Map<String, String> extractAttributes(GameStatus gameStatus) {
         Map<String, String> attributes = new HashMap<>();
 
         // Attribute extrahieren und validieren
-        attributes.put("Arbeiter", validateAttribute(gameStatus.getWorkers()));
-        attributes.put("Freie Arbeiter", validateAttribute(gameStatus.getIdleWorkers()));
-        attributes.put("Mineralien", validateAttribute(gameStatus.getMinerals()));
-        attributes.put("Gas", validateAttribute(gameStatus.getGas()));
-        attributes.put("Photonenkanonen", validateAttribute(gameStatus.getPhotonCannons()));
-        attributes.put("Pylonen", validateAttribute(gameStatus.getPylons()));
-        attributes.put("Nexus", validateAttribute(gameStatus.getNexus()));
-        attributes.put("Gateways", validateAttribute(gameStatus.getGateways()));
-        attributes.put("Cybernetics Cores", validateAttribute(gameStatus.getCyberneticsCores()));
-        attributes.put("Sternentore", validateAttribute(gameStatus.getStargates()));
-        attributes.put("Voidrays", validateAttribute(gameStatus.getVoidrays()));
-        attributes.put("Genutzte Versorgung", validateAttribute(gameStatus.getSupplyUsed()));
-        attributes.put("Versorgungsobergrenze", validateAttribute(gameStatus.getSupplyCap()));
+        attributes.put("Arbeiter", validateAttribute(gameStatus.getWorkers())); // Anzahl der Arbeiter
+        attributes.put("FreieArbeiter", validateAttribute(gameStatus.getIdleWorkers())); // Anzahl der nicht beschäftigten Arbeiter
+        attributes.put("Minerals", validateAttribute(gameStatus.getMinerals())); // Anzahl der verfügbaren Mineralien
+        attributes.put("Gas", validateAttribute(gameStatus.getGas())); // Menge an verfügbarem Gas
+        attributes.put("PhotonCannon", validateAttribute(gameStatus.getPhotonCannons())); // Anzahl der Photon Cannons
+        attributes.put("Pylon", validateAttribute(gameStatus.getPylons())); // Anzahl der Pylonen
+        attributes.put("Nexus", validateAttribute(gameStatus.getNexus())); // Anzahl der Nexus-Einheiten
+        attributes.put("Gateways", validateAttribute(gameStatus.getGateways())); // Anzahl der Gateways
+        attributes.put("CyberneticsCores", validateAttribute(gameStatus.getCyberneticsCores())); // Anzahl der Cybernetics Cores
+        attributes.put("Stargates", validateAttribute(gameStatus.getStargates())); // Anzahl der Stargates
+        attributes.put("Voidrays", validateAttribute(gameStatus.getVoidrays())); // Anzahl der Voidrays
+        attributes.put("SupplyUsed", validateAttribute(gameStatus.getSupplyUsed())); // Genutzte Versorgungseinheiten
+        attributes.put("SupplyCap", validateAttribute(gameStatus.getSupplyCap())); // Maximale Versorgungseinheiten
 
-        return attributes;
+        return attributes; // Rückgabe der Map mit Attributen und Werten
     }
 
     /**
-     * Validiert ein Attribut, indem überprüft wird, ob es null ist, und null-Werte durch "0" ersetzt.
-     * Diese Methode stellt sicher, dass die Map keine null-Werte enthält.
+     * Validiert ein Attribut, um sicherzustellen, dass es nicht null ist.
+     * Falls das Attribut null ist, wird ein Standardwert von "0" zurückgegeben.
      *
-     * @param value Der zu validierende Wert.
-     * @return Der validierte Wert als String.
+     * @param value Der zu validierende Attributwert.
+     * @return Der Attributwert als String oder "0", falls der Wert null ist.
      */
     private static String validateAttribute(Object value) {
-        return value != null ? String.valueOf(value) : "0";
+        return value != null ? String.valueOf(value) : "0"; // Sicherstellen, dass keine null-Werte zurückgegeben werden
     }
 }

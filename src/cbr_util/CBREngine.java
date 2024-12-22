@@ -20,26 +20,37 @@ import java.util.*;
  */
 public class CBREngine {
 
-    /** Singleton-Instanz der CBREngine */
+    /**
+     * Singleton-Instanz der CBREngine
+     */
     private static volatile CBREngine instance;
 
-    /** Das Hauptkonzept des myCBR-Projekts, auf dem die Abfragen basieren */
+    /**
+     * Das Hauptkonzept des myCBR-Projekts, auf dem die Abfragen basieren
+     */
     private Concept statusConcept;
 
-    /** Die Fallbasis (Case Base), die Fälle speichert und abfragt */
+    /**
+     * Die Fallbasis (Case Base), die Fälle speichert und abfragt
+     */
     private DefaultCaseBase caseBase;
 
-    /** Pfad zur myCBR-Projektdatei */
+    /**
+     * Pfad zur myCBR-Projektdatei
+     */
     private static final String PROJECT_PATH = "C:\\Jan\\Universität\\Master\\IT-Studienprojekt\\SpeichernvonMyCBRDaten\\StarCraft2.prj";
 
-    /** Name des Hauptkonzepts im Projekt */
+    /**
+     * Name des Hauptkonzepts im Projekt
+     */
     private static final String CONCEPT_NAME = "Ressourcenentscheidungen";
 
     /**
      * Privater Konstruktor, um die Erstellung mehrerer Instanzen zu verhindern
      * (Singleton-Pattern).
      */
-    private CBREngine() {}
+    private CBREngine() {
+    }
 
     /**
      * Gibt die Singleton-Instanz der CBREngine zurück.
@@ -110,12 +121,13 @@ public class CBREngine {
 
             // Initialisiere die Abfrageinstanz
             Instance queryInstance = retrieval.getQueryInstance();
+
+            // Füge die Abfrageattribute hinzu, wobei null-Attribute ausgeschlossen werden
             List<String> ignoredAttributes = new ArrayList<>();
 
-            // Füge die Abfrageattribute hinzu
             for (Map.Entry<String, String> entry : queryAttributes.entrySet()) {
                 AttributeDesc attrDesc = statusConcept.getAllAttributeDescs().get(entry.getKey());
-                if (attrDesc != null) {
+                if (attrDesc != null && entry.getValue() != null) {
                     queryInstance.addAttribute(attrDesc, entry.getValue());
                 } else {
                     ignoredAttributes.add(entry.getKey());
@@ -124,7 +136,7 @@ public class CBREngine {
 
             // Warnung für ignorierte Attribute
             if (!ignoredAttributes.isEmpty()) {
-                System.out.println("Warnung: Folgende Attribute wurden ignoriert, da sie nicht im Konzept existieren: " + ignoredAttributes);
+                System.out.println("Warnung: Folgende Attribute wurden ignoriert, da sie nicht im Konzept existieren oder null sind: " + ignoredAttributes);
             }
 
             // Starte das Retrieval und speichere die Ergebnisse

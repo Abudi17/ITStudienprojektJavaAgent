@@ -1,51 +1,74 @@
 package model;
 
-import de.dfki.mycbr.util.Pair;
-import de.dfki.mycbr.core.casebase.Instance;
-import de.dfki.mycbr.core.similarity.Similarity;
-
 import java.io.PrintWriter;
-import java.util.Comparator;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+/**
+ * Die Klasse Response ist für das Formatieren und Senden von Antworten verantwortlich.
+ * Sie kombiniert Ähnlichkeitswerte und Kategorien, um eine informative Rückmeldung
+ * an den Client bereitzustellen.
+ */
 public class Response {
 
+    /**
+     * Writer zum Senden der Antworten an den Client.
+     */
     private final PrintWriter out;
 
+    /**
+     * Konstruktor für die Response-Klasse.
+     *
+     * @param out Der PrintWriter, der für das Senden von Antworten an den Client verwendet wird.
+     */
     public Response(PrintWriter out) {
         this.out = out;
     }
 
     /**
-     * Formatiert die Antwort basierend auf den CBR-Ergebnissen.
-     * Gibt nur die Top 5 ähnlichsten Fälle zurück.
+     * Formatiert die kombinierte Antwort basierend auf Ähnlichkeitswerten und Kategorien.
+     * Die Antwort enthält eine Liste der Top 5 Fälle mit den höchsten Ähnlichkeitswerten sowie
+     * die Kategorien aller Fälle.
      *
-     * @param results Liste von CBR-Ergebnissen (Instance-Similarity-Paare).
-     * @return Die formatierte Antwort als String.
+     * @param similarityResults Map, die Fallnamen mit ihren Ähnlichkeitswerten verbindet.
+     * @param categorizedCases  Map, die Fallnamen mit ihren zugehörigen Kategorien verbindet.
+     * @return Eine formatierte Antwort als String, die sowohl die Ähnlichkeitsliste
+     * als auch die Kategorien enthält.
      */
-    public String formatResponse(List<Pair<Instance, Similarity>> results) {
-        // Sortiere die Ergebnisse nach Ähnlichkeit absteigend
-        results.sort(Comparator.comparingDouble((Pair<Instance, Similarity> pair) ->
-                pair.getSecond().getValue()).reversed());
+    public String formatCombinedResponse(Map<String, Double> similarityResults, Map<String, String> categorizedCases) {
+        StringBuilder responseBuilder = new StringBuilder();
 
-        // Baue die Antwort basierend auf den Top 5 Ergebnissen
-        StringBuilder responseBuilder = new StringBuilder("Ähnlichste Fälle:\n");
-        int limit = Math.min(results.size(), 5); // Maximal 5 Einträge oder weniger, wenn weniger vorhanden
-        for (int i = 0; i < limit; i++) {
-            Pair<Instance, Similarity> result = results.get(i);
-            responseBuilder.append("Fall: ").append(result.getFirst().getName())
-                    .append(", Ähnlichkeit: ").append(result.getSecond().getValue()).append("\n");
+        // Ähnlichkeitsliste erstellen (Top 5 Fälle)
+        responseBuilder.append("INFO: Ähnlichste Fälle:\n");
+        Map<String, Double> top5Similarities = new LinkedHashMap<>();
+        similarityResults.entrySet().stream()
+                .sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue())) // Absteigend sortieren
+                .limit(5) // Maximal 5 Fälle
+                .forEach(entry -> top5Similarities.put(entry.getKey(), entry.getValue())); // Manuell in LinkedHashMap speichern
+
+        top5Similarities.forEach((caseName, similarity) ->
+                responseBuilder.append("Fall: ").append(caseName)
+                        .append(", Ähnlichkeit: ").append(similarity).append("\n"));
+
+        // Kategorisierte Fälle nur für die Top 5 hinzufügen
+        responseBuilder.append("\nINFO: Ähnlichste Fälle mit Kategorien:\n");
+        for (String caseName : top5Similarities.keySet()) {
+            String category = categorizedCases.getOrDefault(caseName, "Unbekannt");
+            responseBuilder.append("Fall: ").append(caseName)
+                    .append(", Kategorie: ").append(category).append("\n");
         }
+
         return responseBuilder.toString();
     }
 
+
     /**
-     * Sendet die Antwort an den Python-Agenten.
+     * Sendet die formatierte Antwort an den Client.
      *
-     * @param response Die formatierte Antwort als String.
+     * @param response Die zu sendende Antwort als String.
      */
     public void sendResponse(String response) {
-        out.println(response);
-        System.out.println(response);
+        out.println(response); // Antwort an den Client senden
+        System.out.println(response); // Antwort auch auf der Konsole ausgeben (Debugging)
     }
 }
