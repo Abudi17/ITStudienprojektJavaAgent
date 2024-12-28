@@ -1,7 +1,9 @@
 package model;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import java.io.PrintWriter;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -27,48 +29,46 @@ public class Response {
 
     /**
      * Formatiert die kombinierte Antwort basierend auf Ähnlichkeitswerten und Kategorien.
-     * Die Antwort enthält eine Liste der Top 5 Fälle mit den höchsten Ähnlichkeitswerten sowie
-     * die Kategorien aller Fälle.
+     * Gibt die Antwort im JSON-Format zurück.
      *
      * @param similarityResults Map, die Fallnamen mit ihren Ähnlichkeitswerten verbindet.
      * @param categorizedCases  Map, die Fallnamen mit ihren zugehörigen Kategorien verbindet.
-     * @return Eine formatierte Antwort als String, die sowohl die Ähnlichkeitsliste
-     * als auch die Kategorien enthält.
+     * @return Eine formatierte Antwort als JSON-String.
      */
     public String formatCombinedResponse(Map<String, Double> similarityResults, Map<String, String> categorizedCases) {
-        StringBuilder responseBuilder = new StringBuilder();
+        // Erstelle eine JSON-Struktur
+        JsonObject jsonResponse = new JsonObject();
 
-        // Ähnlichkeitsliste erstellen (Top 5 Fälle)
-        responseBuilder.append("INFO: Ähnlichste Fälle:\n");
-        Map<String, Double> top5Similarities = new LinkedHashMap<>();
+        // Top 5 ähnliche Fälle
+        JsonObject similarCases = new JsonObject();
         similarityResults.entrySet().stream()
                 .sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue())) // Absteigend sortieren
                 .limit(5) // Maximal 5 Fälle
-                .forEach(entry -> top5Similarities.put(entry.getKey(), entry.getValue())); // Manuell in LinkedHashMap speichern
+                .forEach(entry -> {
+                    String caseName = entry.getKey();
+                    Double similarity = entry.getValue();
+                    String category = categorizedCases.getOrDefault(caseName, "Unbekannt");
 
-        top5Similarities.forEach((caseName, similarity) ->
-                responseBuilder.append("Fall: ").append(caseName)
-                        .append(", Ähnlichkeit: ").append(similarity).append("\n"));
+                    JsonObject caseDetails = new JsonObject();
+                    caseDetails.addProperty("similarity", similarity);
+                    caseDetails.addProperty("category", category);
 
-        // Kategorisierte Fälle nur für die Top 5 hinzufügen
-        responseBuilder.append("\nINFO: Ähnlichste Fälle mit Kategorien:\n");
-        for (String caseName : top5Similarities.keySet()) {
-            String category = categorizedCases.getOrDefault(caseName, "Unbekannt");
-            responseBuilder.append("Fall: ").append(caseName)
-                    .append(", Kategorie: ").append(category).append("\n");
-        }
+                    similarCases.add(caseName, caseDetails);
+                });
 
-        return responseBuilder.toString();
+        jsonResponse.add("similar_cases", similarCases);
+
+        // Konvertiere das JSON-Objekt in einen String
+        return new Gson().toJson(jsonResponse);
     }
 
-
     /**
-     * Sendet die formatierte Antwort an den Client.
+     * Sendet die formatierte JSON-Antwort an den Client.
      *
-     * @param response Die zu sendende Antwort als String.
+     * @param response Die zu sendende JSON-Antwort als String.
      */
     public void sendResponse(String response) {
-        out.println(response); // Antwort an den Client senden
-        System.out.println(response); // Antwort auch auf der Konsole ausgeben (Debugging)
+        out.println(response); // JSON-Antwort an den Client senden
+        System.out.println("DEBUG: Gesendete JSON-Antwort: " + response); // Antwort für Debugging auf der Konsole ausgeben
     }
 }
