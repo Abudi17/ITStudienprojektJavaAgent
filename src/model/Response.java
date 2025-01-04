@@ -43,13 +43,14 @@ public class Response {
         JsonObject similarCases = new JsonObject();
         similarityResults.entrySet().stream()
                 .sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue())) // Absteigend sortieren
-                .limit(5) // Maximal 5 Fälle
+                .limit(1) // Maximal 5 Fälle
                 .forEach(entry -> {
                     String caseName = entry.getKey();
                     Double similarity = entry.getValue();
                     String category = categorizedCases.getOrDefault(caseName, "Unbekannt");
 
                     JsonObject caseDetails = new JsonObject();
+                    caseDetails.addProperty("name", caseName);
                     caseDetails.addProperty("similarity", similarity);
                     caseDetails.addProperty("category", category);
 
