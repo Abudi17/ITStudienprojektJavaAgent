@@ -50,7 +50,6 @@ public class Response {
                     String category = categorizedCases.getOrDefault(caseName, "Unbekannt");
 
                     JsonObject caseDetails = new JsonObject();
-                    caseDetails.addProperty("name", caseName);
                     caseDetails.addProperty("similarity", similarity);
                     caseDetails.addProperty("category", category);
 

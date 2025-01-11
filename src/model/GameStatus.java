@@ -29,6 +29,8 @@ public class GameStatus implements Serializable {
     private int voidrays;               // Anzahl der Void Rays
     private int supplyUsed;             // Aktuell verwendetes Versorgungslimit
     private int supplyCap;              // Maximales Versorgungslimit
+    private int forge;                  // Anzahl der Schmiede
+    private int sentry;                 // Anzahl der Protektor
 
     /**
      * Standardkonstruktor, der alle Werte auf ihre Standardwerte (0) setzt.
@@ -55,9 +57,11 @@ public class GameStatus implements Serializable {
      * @param voidrays         Anzahl der Void Rays
      * @param supplyUsed       Verwendetes Versorgungslimit
      * @param supplyCap        Maximales Versorgungslimit
+     * @param forge            Anzahl der Schmiede
+     * @param sentry           Anzahl der Protektor
      */
     public GameStatus(int iteration, int workers, int idleWorkers, int minerals, int gas, int photonCannons, int pylons,
-                      int nexus, int gateways, int cyberneticsCores, int stargates, int voidrays, int supplyUsed, int supplyCap) {
+                      int nexus, int gateways, int cyberneticsCores, int stargates, int voidrays, int supplyUsed, int supplyCap, int forge, int sentry) {
         this.iteration = iteration;
         this.workers = Math.max(0, workers); // Validierung: Keine negativen Werte
         this.idleWorkers = Math.max(0, idleWorkers);
@@ -72,6 +76,8 @@ public class GameStatus implements Serializable {
         this.voidrays = Math.max(0, voidrays);
         this.supplyUsed = Math.max(0, supplyUsed);
         this.supplyCap = Math.max(0, supplyCap);
+        this.forge = Math.max(0, forge);
+        this.sentry = Math.max(0, sentry);
     }
 
     // Getter-Methoden
@@ -132,6 +138,14 @@ public class GameStatus implements Serializable {
         return supplyCap;
     }
 
+    public int getForge() {
+        return forge;
+    }
+
+    public int getSentry() {
+        return sentry;
+    }
+
     // Setter-Methoden mit Validierung (keine negativen Werte)
 
     public void setWorkers(int workers) {
@@ -190,6 +204,14 @@ public class GameStatus implements Serializable {
         this.supplyCap = Math.max(0, supplyCap);
     }
 
+    public void setForge(int forge) {
+        this.forge = Math.max(0, forge);
+    }
+
+    public void setSentry(int sentry) {
+        this.sentry = Math.max(0, sentry);
+    }
+
     /**
      * Gibt eine String-Repräsentation des GameStatus-Objekts zurück.
      *
@@ -212,6 +234,8 @@ public class GameStatus implements Serializable {
                 ", voidrays=" + voidrays +
                 ", supplyUsed=" + supplyUsed +
                 ", supplyCap=" + supplyCap +
+                ", forge=" + forge +
+                ", sentry=" + sentry +
                 '}';
     }
 

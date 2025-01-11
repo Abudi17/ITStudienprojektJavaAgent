@@ -25,8 +25,8 @@ public class RetrievalHelper {
         // Sortiere die Ergebnisse basierend auf Ähnlichkeitswerten in absteigender Reihenfolge
         results.sort((p1, p2) -> Double.compare(p2.getSecond().getValue(), p1.getSecond().getValue()));
 
-        // Begrenze die Ergebnisse auf die Top-5 Einträge
-        List<Pair<Instance, Similarity>> topResults = results.stream().limit(5).toList();
+        // Begrenze die Ergebnisse auf die Top Eintrag
+        List<Pair<Instance, Similarity>> topResults = results.stream().limit(1).toList();
 
         // Map zur Speicherung der Zuordnung von Fallnamen und Kategorien
         Map<String, String> categorizedCases = new HashMap<>();
@@ -86,14 +86,36 @@ public class RetrievalHelper {
      * @return Die entsprechende Kategorie des Falls oder "Unknown" für unklassifizierte Fälle.
      */
     private static String getCategoryFromCaseNumber(int caseNumber) {
-        if (caseNumber >= 1 && caseNumber <= 5) {
-            return "Build";
-        } else if (caseNumber >= 6 && caseNumber <= 10) {
-            return "Troops";
-        } else if (caseNumber >= 11 && caseNumber <= 15) {
-            return "Attack";
-        } else if (caseNumber >= 16 && caseNumber <= 20) {
-            return "Defense";
+        if (caseNumber == 0) {
+            return "build_Nexus";
+        } else if (caseNumber == 1) {
+            return "build_Pylon";
+        } else if (caseNumber == 2) {
+            return "build_Gateway";
+        } else if (caseNumber == 3) {
+            return "build_Assimilator";
+        } else if (caseNumber == 4) {
+            return "build_CyberneticsCore";
+        } else if (caseNumber == 5) {
+            return "build_Stargate";
+        } else if (caseNumber == 6) {
+            return "build_Forge";
+        } else if (caseNumber == 7) {
+            return "troup_Worker";
+        } else if (caseNumber == 8) {
+            return "troup_Voidray";
+        } else if (caseNumber == 9) {
+            return "troup_Sentry";
+        } else if (caseNumber == 10) {
+            return "deff_PhotonCannon";
+        } else if (caseNumber == 11) {
+            return "deff_Sentry";
+        } else if (caseNumber == 12) {
+            return "attack_Voidray";
+        } else if (caseNumber == 13) {
+            return "attack_Sentry";
+        } else if (caseNumber == 14) {
+            return "attack_Sentry_Voidray";
         } else {
             return "Unknown"; // Kategorie für Fälle außerhalb des definierten Bereichs
         }
