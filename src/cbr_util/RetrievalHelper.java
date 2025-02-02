@@ -25,7 +25,7 @@ public class RetrievalHelper {
         // Sortiere die Ergebnisse basierend auf Ähnlichkeitswerten in absteigender Reihenfolge
         results.sort((p1, p2) -> Double.compare(p2.getSecond().getValue(), p1.getSecond().getValue()));
 
-        // Begrenze die Ergebnisse auf die Top Eintrag
+        // Begrenze die Ergebnisse auf den Top-Eintrag
         List<Pair<Instance, Similarity>> topResults = results.stream().limit(1).toList();
 
         // Map zur Speicherung der Zuordnung von Fallnamen und Kategorien
@@ -74,50 +74,96 @@ public class RetrievalHelper {
      * Bestimmt die Kategorie eines Falls basierend auf dessen Fallnummer.
      *
      * <p>
-     * Kategorien basieren auf festen Bereichen:
-     * - 1 bis 5: "Build"
-     * - 6 bis 10: "Troops"
-     * - 11 bis 15: "Attack"
-     * - 16 bis 20: "Defense"
-     * - Andere: "Unknown"
+     * Kategorien basieren auf festen Bereichszuweisungen. Jede Kategorie entspricht
+     * einer spezifischen Art von Aktion, wie z.B. Bauen, Angreifen oder Verteidigen,
+     * die durch die Fallnummer definiert wird:
+     * - 1 bis 5: "build_Nexus" (Errichtung eines Nexus)
+     * - 6 bis 10: "build_Pylon" (Errichtung eines Pylons)
+     * - 11 bis 20: "troup_Worker" (Erzeugung von Arbeitern)
+     * - 21 bis 40: "build_Gateway" (Errichtung eines Gateways)
+     * - 41 bis 60: "build_CyberneticCore" (Errichtung eines Kybernetik-Kerns)
+     * - 61 bis 80: "build_Assimilator" (Errichtung eines Assimilators)
+     * - 81 bis 100: "build_Stargate" (Errichtung eines Sternentors)
+     * - 101 bis 120: "build_Forge" (Errichtung einer Schmiede)
+     * - 121 bis 130: "deff_PhotonCannon" (Verteidigung mit Photonengeschütz)
+     * - 131 bis 140: "troup_Voidray" (Erzeugung eines Voidrays)
+     * - 141 bis 150: "troup_Sentry" (Erzeugung eines Sentrys)
+     * - 151 bis 160: "deff_Sentry" (Verteidigung mit Sentrys)
+     * - 161 bis 170: "attack_Voidray" (Angriff mit Voidrays)
+     * - 171 bis 180: "attack_Sentry" (Angriff mit Sentrys)
+     * - 181 bis 190: "attack_Sentry_Voidray" (Kombinierter Angriff mit Sentrys und Voidrays)
+     * - 191 bis 200: platzhalter
+     * - Andere: "Unknown" (Unklassifizierte Fälle)
      * </p>
      *
      * @param caseNumber Die Fallnummer, die aus dem Fallnamen extrahiert wurde.
      * @return Die entsprechende Kategorie des Falls oder "Unknown" für unklassifizierte Fälle.
      */
     private static String getCategoryFromCaseNumber(int caseNumber) {
-        if (caseNumber == 0) {
+        // Fallnummer im Bereich 1 bis 5: Nexus wird gebaut
+        if (caseNumber >= 1 && caseNumber <= 5) {
             return "build_Nexus";
-        } else if (caseNumber == 1) {
+        }
+        // Fallnummer im Bereich 6 bis 10: Pylon wird gebaut
+        else if (caseNumber >= 6 && caseNumber <= 10) {
             return "build_Pylon";
-        } else if (caseNumber == 2) {
-            return "build_Gateway";
-        } else if (caseNumber == 3) {
-            return "build_Assimilator";
-        } else if (caseNumber == 4) {
-            return "build_CyberneticsCore";
-        } else if (caseNumber == 5) {
-            return "build_Stargate";
-        } else if (caseNumber == 6) {
-            return "build_Forge";
-        } else if (caseNumber == 7) {
+        }
+        // Fallnummer im Bereich 11 bis 20: Arbeiter werden erzeugt
+        else if (caseNumber >= 11 && caseNumber <= 20) {
             return "troup_Worker";
-        } else if (caseNumber == 8) {
-            return "troup_Voidray";
-        } else if (caseNumber == 9) {
-            return "troup_Sentry";
-        } else if (caseNumber == 10) {
+        }
+        // Fallnummer im Bereich 21 bis 40: Gateway wird gebaut
+        else if (caseNumber >= 21 && caseNumber <= 40) {
+            return "build_Gateway";
+        }
+        // Fallnummer im Bereich 41 bis 60: Kybernetik-Kern wird gebaut
+        else if (caseNumber >= 41 && caseNumber <= 60) {
+            return "build_CyberneticCore";
+        }
+        // Fallnummer im Bereich 61 bis 80: Assimilator wird gebaut
+        else if (caseNumber >= 61 && caseNumber <= 80) {
+            return "build_Assimilator";
+        }
+        // Fallnummer im Bereich 81 bis 100: Sternentor wird gebaut
+        else if (caseNumber >= 81 && caseNumber <= 100) {
+            return "build_Stargate";
+        }
+        // Fallnummer im Bereich 101 bis 120: Schmiede wird gebaut
+        else if (caseNumber >= 101 && caseNumber <= 120) {
+            return "build_Forge";
+        }
+        // Fallnummer im Bereich 121 bis 130: Photonengeschütz zur Verteidigung
+        else if (caseNumber >= 121 && caseNumber <= 130) {
             return "deff_PhotonCannon";
-        } else if (caseNumber == 11) {
+        }
+        // Fallnummer im Bereich 131 bis 140: Voidray wird erzeugt
+        else if (caseNumber >= 131 && caseNumber <= 140) {
+            return "troup_Voidray";
+        }
+        // Fallnummer im Bereich 141 bis 150: Sentry wird erzeugt
+        else if (caseNumber >= 141 && caseNumber <= 150) {
+            return "troup_Sentry";
+        }
+        // Fallnummer im Bereich 151 bis 160: Verteidigung mit Sentrys
+        else if (caseNumber >= 151 && caseNumber <= 160) {
             return "deff_Sentry";
-        } else if (caseNumber == 12) {
+        }
+        // Fallnummer im Bereich 161 bis 170: Angriff mit Voidrays
+        else if (caseNumber >= 161 && caseNumber <= 170) {
             return "attack_Voidray";
-        } else if (caseNumber == 13) {
+        }
+        // Fallnummer im Bereich 171 bis 180: Angriff mit Sentrys
+        else if (caseNumber >= 171 && caseNumber <= 180) {
             return "attack_Sentry";
-        } else if (caseNumber == 14) {
+        }
+        // Fallnummer im Bereich 181 bis 190: Kombinierter Angriff mit Sentrys und Voidrays
+        else if (caseNumber >= 181 && caseNumber <= 190) {
             return "attack_Sentry_Voidray";
-        } else {
-            return "Unknown"; // Kategorie für Fälle außerhalb des definierten Bereichs
+        }
+        // Für alle anderen Fallnummern: Unbekannte Kategorie
+        else {
+            return "Unknown";
         }
     }
+
 }
