@@ -101,63 +101,63 @@ public class RetrievalHelper {
      */
     private static String getCategoryFromCaseNumber(int caseNumber) {
         // Fallnummer im Bereich 1 bis 5: Nexus wird gebaut
-        if (caseNumber >= 1 && caseNumber <= 5) {
+        if (caseNumber == 0) {
             return "build_Nexus";
         }
         // Fallnummer im Bereich 6 bis 10: Pylon wird gebaut
-        else if (caseNumber >= 6 && caseNumber <= 10) {
+        else if (caseNumber ==1 ) {
             return "build_Pylon";
         }
         // Fallnummer im Bereich 11 bis 20: Arbeiter werden erzeugt
-        else if (caseNumber >= 11 && caseNumber <= 20) {
+        else if (caseNumber == 7) {
             return "troup_Worker";
         }
         // Fallnummer im Bereich 21 bis 40: Gateway wird gebaut
-        else if (caseNumber >= 21 && caseNumber <= 40) {
+        else if (caseNumber == 2) {
             return "build_Gateway";
         }
         // Fallnummer im Bereich 41 bis 60: Kybernetik-Kern wird gebaut
-        else if (caseNumber >= 41 && caseNumber <= 60) {
-            return "build_CyberneticCore";
+        else if (caseNumber == 4) {
+            return "build_CyberneticsCore";
         }
         // Fallnummer im Bereich 61 bis 80: Assimilator wird gebaut
-        else if (caseNumber >= 61 && caseNumber <= 80) {
+        else if (caseNumber == 3) {
             return "build_Assimilator";
         }
         // Fallnummer im Bereich 81 bis 100: Sternentor wird gebaut
-        else if (caseNumber >= 81 && caseNumber <= 100) {
+        else if (caseNumber == 5) {
             return "build_Stargate";
         }
         // Fallnummer im Bereich 101 bis 120: Schmiede wird gebaut
-        else if (caseNumber >= 101 && caseNumber <= 120) {
+        else if (caseNumber == 6) {
             return "build_Forge";
         }
         // Fallnummer im Bereich 121 bis 130: Photonengeschütz zur Verteidigung
-        else if (caseNumber >= 121 && caseNumber <= 130) {
+        else if (caseNumber == 10) {
             return "deff_PhotonCannon";
         }
         // Fallnummer im Bereich 131 bis 140: Voidray wird erzeugt
-        else if (caseNumber >= 131 && caseNumber <= 140) {
+        else if (caseNumber == 8) {
             return "troup_Voidray";
         }
         // Fallnummer im Bereich 141 bis 150: Sentry wird erzeugt
-        else if (caseNumber >= 141 && caseNumber <= 150) {
+        else if (caseNumber == 9) {
             return "troup_Sentry";
         }
         // Fallnummer im Bereich 151 bis 160: Verteidigung mit Sentrys
-        else if (caseNumber >= 151 && caseNumber <= 160) {
+        else if (caseNumber == 11) {
             return "deff_Sentry";
         }
         // Fallnummer im Bereich 161 bis 170: Angriff mit Voidrays
-        else if (caseNumber >= 161 && caseNumber <= 170) {
+        else if (caseNumber == 12) {
             return "attack_Voidray";
         }
         // Fallnummer im Bereich 171 bis 180: Angriff mit Sentrys
-        else if (caseNumber >= 171 && caseNumber <= 180) {
+        else if (caseNumber == 13) {
             return "attack_Sentry";
         }
         // Fallnummer im Bereich 181 bis 190: Kombinierter Angriff mit Sentrys und Voidrays
-        else if (caseNumber >= 181 && caseNumber <= 190) {
+        else if (caseNumber == 14) {
             return "attack_Sentry_Voidray";
         }
         // Für alle anderen Fallnummern: Unbekannte Kategorie
@@ -167,3 +167,6 @@ public class RetrievalHelper {
     }
 
 }
+
+
+

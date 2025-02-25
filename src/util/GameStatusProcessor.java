@@ -38,7 +38,8 @@ public class GameStatusProcessor {
         attributes.put("SupplyUsed", validateAttribute(gameStatus.getSupplyUsed())); // Genutzte Versorgungseinheiten
         attributes.put("SupplyCap", validateAttribute(gameStatus.getSupplyCap())); // Maximale Versorgungseinheiten
         attributes.put("Forge", validateAttribute(gameStatus.getForge())); // Anzahl der Forge
-        attributes.put("Sentry", validateAttribute(gameStatus.getSentry())); // Anzahl der Sentry
+        attributes.put("Sentry", validateAttribute(gameStatus.getSentry()));
+        attributes.put("Assimilator", validateAttribute(gameStatus.getAssimilator()));// Anzahl der Assimilator
 
         return attributes; // Rückgabe der Map mit Attributen und Werten
     }

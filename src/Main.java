@@ -88,6 +88,7 @@ public class Main {
                                     caseName -> caseName, // Fallname
                                     _ -> Math.random() // Zufallswert als Ähnlichkeitswert
                             ));
+                    System.out.println("Das sind die Kategorisierten Fälle: " + categorizedCases);
 
                     // Formatieren und Senden der kombinierten Antwort
                     Response responseHandler = new Response(out);

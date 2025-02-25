@@ -31,6 +31,7 @@ public class GameStatus implements Serializable {
     private int supplyCap;              // Maximales Versorgungslimit
     private int forge;                  // Anzahl der Schmiede
     private int sentry;                 // Anzahl der Protektor
+    private int assimilator;
 
     /**
      * Standardkonstruktor, der alle Werte auf ihre Standardwerte (0) setzt.
@@ -59,9 +60,10 @@ public class GameStatus implements Serializable {
      * @param supplyCap        Maximales Versorgungslimit
      * @param forge            Anzahl der Schmiede
      * @param sentry           Anzahl der Protektor
+     * @param assimilator
      */
     public GameStatus(int iteration, int workers, int idleWorkers, int minerals, int gas, int photonCannons, int pylons,
-                      int nexus, int gateways, int cyberneticsCores, int stargates, int voidrays, int supplyUsed, int supplyCap, int forge, int sentry) {
+                      int nexus, int gateways, int cyberneticsCores, int stargates, int voidrays, int supplyUsed, int supplyCap, int forge, int sentry, int assimilator) {
         this.iteration = iteration;
         this.workers = Math.max(0, workers); // Validierung: Keine negativen Werte
         this.idleWorkers = Math.max(0, idleWorkers);
@@ -78,6 +80,7 @@ public class GameStatus implements Serializable {
         this.supplyCap = Math.max(0, supplyCap);
         this.forge = Math.max(0, forge);
         this.sentry = Math.max(0, sentry);
+        this.assimilator = Math.max(0, assimilator);
     }
 
     // Getter-Methoden
@@ -146,6 +149,8 @@ public class GameStatus implements Serializable {
         return sentry;
     }
 
+    public int getAssimilator() {return assimilator;}
+
     // Setter-Methoden mit Validierung (keine negativen Werte)
 
     public void setWorkers(int workers) {
@@ -212,6 +217,8 @@ public class GameStatus implements Serializable {
         this.sentry = Math.max(0, sentry);
     }
 
+    public void setAssimilator(int assimilator) {this.assimilator = Math.max(0, assimilator);}
+
     /**
      * Gibt eine String-Repräsentation des GameStatus-Objekts zurück.
      *
@@ -236,6 +243,7 @@ public class GameStatus implements Serializable {
                 ", supplyCap=" + supplyCap +
                 ", forge=" + forge +
                 ", sentry=" + sentry +
+                ", assimilator=" + assimilator +
                 '}';
     }
 

@@ -37,8 +37,8 @@ public class CBREngine {
 
     /**
      * Pfad zur myCBR-Projektdatei
-     */
-    private static final String PROJECT_PATH = "C:\\Jan\\Universität\\Master\\IT-Studienprojekt\\SpeichernvonMyCBRDaten\\StarCraft2.prj";
+     */ // ICH PASSE DAS JETZT AN EIG: WAR ES VORHER DAS HIER VON KLAUSI "C:\\Users\\abdul\\Desktop\\IT-Studienprojekt\\StarCraft2.prj"
+    private static final String PROJECT_PATH = "C:\\Users\\abdul\\Desktop\\IT-Studienprojekt\\StarCraft2.prj";
 
     /**
      * Name des Hauptkonzepts im Projekt
@@ -159,6 +159,11 @@ public class CBREngine {
     public Map<String, String> retrieveAndCategorizeCases(Map<String, String> queryAttributes) {
         // Rufe die Ergebnisse des Retrievals ab
         List<Pair<Instance, Similarity>> results = retrieveCases(queryAttributes);
+
+        for (Pair<Instance, Similarity> result : results) {
+            System.out.println("Instance: " + result.getFirst() + ", Similarity: " + result.getSecond());
+        }
+
 
         // Übergib die Ergebnisse an den RetrievalHelper zur Kategorisierung
         return RetrievalHelper.getCategorizedTopCases(results);
