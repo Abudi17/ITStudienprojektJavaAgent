@@ -160,6 +160,9 @@ public class RetrievalHelper {
         else if (caseNumber == 14) {
             return "attack_Sentry_Voidray";
         }
+        else if (caseNumber == 15) {
+            return "troup_Worker_Assimilator";
+        }
         // Für alle anderen Fallnummern: Unbekannte Kategorie
         else {
             return "Unknown";

@@ -40,6 +40,7 @@ public class GameStatusProcessor {
         attributes.put("Forge", validateAttribute(gameStatus.getForge())); // Anzahl der Forge
         attributes.put("Sentry", validateAttribute(gameStatus.getSentry()));
         attributes.put("Assimilator", validateAttribute(gameStatus.getAssimilator()));// Anzahl der Assimilator
+        attributes.put("totalAssimilatorHarvesters", validateAttribute(gameStatus.getTotalAssimilatorHarvesters()));
 
         return attributes; // Rückgabe der Map mit Attributen und Werten
     }
