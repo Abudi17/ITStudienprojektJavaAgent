@@ -163,6 +163,21 @@ public class RetrievalHelper {
         else if (caseNumber == 15) {
             return "troup_Worker_Assimilator";
         }
+        else if (caseNumber == 16) {
+            return "troup_Zealot";
+        }
+        else if (caseNumber == 17) {
+            return "troup_Stalker";
+        }
+        else if (caseNumber == 18) {
+            return "attack_Zealot";
+        }
+        else if (caseNumber == 19) {
+            return "attack_Stalker";
+        }
+        else if (caseNumber == 20) {
+            return "attack_Zealot_Stalker";
+        }
         // Für alle anderen Fallnummern: Unbekannte Kategorie
         else {
             return "Unknown";

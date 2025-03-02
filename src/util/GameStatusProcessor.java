@@ -28,19 +28,19 @@ public class GameStatusProcessor {
         attributes.put("FreieArbeiter", validateAttribute(gameStatus.getIdleWorkers())); // Anzahl der nicht beschäftigten Arbeiter
         attributes.put("Minerals", validateAttribute(gameStatus.getMinerals())); // Anzahl der verfügbaren Mineralien
         attributes.put("Gas", validateAttribute(gameStatus.getGas())); // Menge an verfügbarem Gas
-        attributes.put("PhotonCannon", validateAttribute(gameStatus.getPhotonCannons())); // Anzahl der Photon Cannons
         attributes.put("Pylon", validateAttribute(gameStatus.getPylons())); // Anzahl der Pylonen
         attributes.put("Nexus", validateAttribute(gameStatus.getNexus())); // Anzahl der Nexus-Einheiten
         attributes.put("Gateways", validateAttribute(gameStatus.getGateways())); // Anzahl der Gateways
         attributes.put("CyberneticsCores", validateAttribute(gameStatus.getCyberneticsCores())); // Anzahl der Cybernetics Cores
-        attributes.put("Stargates", validateAttribute(gameStatus.getStargates())); // Anzahl der Stargates
-        attributes.put("Voidrays", validateAttribute(gameStatus.getVoidrays())); // Anzahl der Voidrays
+
         attributes.put("SupplyUsed", validateAttribute(gameStatus.getSupplyUsed())); // Genutzte Versorgungseinheiten
         attributes.put("SupplyCap", validateAttribute(gameStatus.getSupplyCap())); // Maximale Versorgungseinheiten
-        attributes.put("Forge", validateAttribute(gameStatus.getForge())); // Anzahl der Forge
-        attributes.put("Sentry", validateAttribute(gameStatus.getSentry()));
+
         attributes.put("Assimilator", validateAttribute(gameStatus.getAssimilator()));// Anzahl der Assimilator
         attributes.put("totalAssimilatorHarvesters", validateAttribute(gameStatus.getTotalAssimilatorHarvesters()));
+        attributes.put("Zealot", validateAttribute(gameStatus.getZealot()));
+        attributes.put("Stalker", validateAttribute(gameStatus.getStalker()));
+        attributes.put("supplyDifferenceUsedCap", validateAttribute(gameStatus.getSupplyDifferenceUsedCap()));
 
         return attributes; // Rückgabe der Map mit Attributen und Werten
     }

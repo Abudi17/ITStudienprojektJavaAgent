@@ -20,19 +20,17 @@ public class GameStatus implements Serializable {
     private int idleWorkers;            // Anzahl der untätigen Arbeiter
     private int minerals;               // Menge der verfügbaren Mineralien
     private int gas;                    // Menge des verfügbaren Gases
-    private int photonCannons;          // Anzahl der Photon-Kanonen
     private int pylons;                 // Anzahl der Pylonen
     private int nexus;                  // Anzahl der Nexus-Strukturen
     private int gateways;               // Anzahl der Gateways
     private int cyberneticsCores;       // Anzahl der Cybernetics Cores
-    private int stargates;              // Anzahl der Stargates
-    private int voidrays;               // Anzahl der Void Rays
     private int supplyUsed;             // Aktuell verwendetes Versorgungslimit
     private int supplyCap;              // Maximales Versorgungslimit
-    private int forge;                  // Anzahl der Schmiede
-    private int sentry;                 // Anzahl der Protektor
     private int assimilator;
     private int totalAssimilatorHarvesters;
+    private int zealot;
+    private int stalker;
+    private int supplyDifferenceUsedCap;
 
     /**
      * Standardkonstruktor, der alle Werte auf ihre Standardwerte (0) setzt.
@@ -50,39 +48,37 @@ public class GameStatus implements Serializable {
      * @param idleWorkers      Anzahl der untätigen Arbeiter
      * @param minerals         Verfügbare Mineralien
      * @param gas              Verfügbares Gas
-     * @param photonCannons    Anzahl der Photon-Kanonen
      * @param pylons           Anzahl der Pylonen
      * @param nexus            Anzahl der Nexus-Strukturen
      * @param gateways         Anzahl der Gateways
      * @param cyberneticsCores Anzahl der Cybernetics Cores
-     * @param stargates        Anzahl der Stargates
-     * @param voidrays         Anzahl der Void Rays
      * @param supplyUsed       Verwendetes Versorgungslimit
      * @param supplyCap        Maximales Versorgungslimit
-     * @param forge            Anzahl der Schmiede
-     * @param sentry           Anzahl der Protektor
      * @param assimilator
      * @param totalAssimilatorHarvesters
+     * @param zealot
+     * @param stalker
+     * @param supplyDifferenceUsedCap
      */
-    public GameStatus(int iteration, int workers, int idleWorkers, int minerals, int gas, int photonCannons, int pylons,
-                      int nexus, int gateways, int cyberneticsCores, int stargates, int voidrays, int supplyUsed, int supplyCap, int forge, int sentry, int assimilator, int totalAssimilatorHarvesters) {
+    public GameStatus(int iteration, int workers, int idleWorkers, int minerals, int gas, int pylons,
+                      int nexus, int gateways, int cyberneticsCores, int supplyUsed, int supplyCap, int assimilator,
+                      int totalAssimilatorHarvesters, int zealot, int stalker, int supplyDifferenceUsedCap) {
         this.iteration = iteration;
         this.workers = Math.max(0, workers); // Validierung: Keine negativen Werte
         this.idleWorkers = Math.max(0, idleWorkers);
         this.minerals = Math.max(0, minerals);
         this.gas = Math.max(0, gas);
-        this.photonCannons = Math.max(0, photonCannons);
         this.pylons = Math.max(0, pylons);
         this.nexus = Math.max(0, nexus);
         this.gateways = Math.max(0, gateways);
         this.cyberneticsCores = Math.max(0, cyberneticsCores);
-        this.stargates = Math.max(0, stargates);
-        this.voidrays = Math.max(0, voidrays);
         this.supplyUsed = Math.max(0, supplyUsed);
         this.supplyCap = Math.max(0, supplyCap);
-        this.forge = Math.max(0, forge);
-        this.sentry = Math.max(0, sentry);
         this.assimilator = Math.max(0, assimilator);
+        this.totalAssimilatorHarvesters = Math.max(0, totalAssimilatorHarvesters);
+        this.zealot = Math.max(0, zealot);
+        this.stalker = Math.max(0, stalker);
+        this.supplyDifferenceUsedCap = Math.max(0, supplyDifferenceUsedCap);
     }
 
     // Getter-Methoden
@@ -107,9 +103,6 @@ public class GameStatus implements Serializable {
         return gas;
     }
 
-    public int getPhotonCannons() {
-        return photonCannons;
-    }
 
     public int getPylons() {
         return pylons;
@@ -127,14 +120,6 @@ public class GameStatus implements Serializable {
         return cyberneticsCores;
     }
 
-    public int getStargates() {
-        return stargates;
-    }
-
-    public int getVoidrays() {
-        return voidrays;
-    }
-
     public int getSupplyUsed() {
         return supplyUsed;
     }
@@ -143,17 +128,14 @@ public class GameStatus implements Serializable {
         return supplyCap;
     }
 
-    public int getForge() {
-        return forge;
-    }
-
-    public int getSentry() {
-        return sentry;
-    }
 
     public int getAssimilator() {return assimilator;}
 
     public int getTotalAssimilatorHarvesters() {return totalAssimilatorHarvesters;}
+
+    public int getZealot() {return zealot;}
+    public int getStalker() {return stalker;}
+    public int getSupplyDifferenceUsedCap() {return supplyDifferenceUsedCap;}
 
     // Setter-Methoden mit Validierung (keine negativen Werte)
 
@@ -177,9 +159,6 @@ public class GameStatus implements Serializable {
         this.gas = Math.max(0, gas);
     }
 
-    public void setPhotonCannons(int photonCannons) {
-        this.photonCannons = Math.max(0, photonCannons);
-    }
 
     public void setPylons(int pylons) {
         this.pylons = Math.max(0, pylons);
@@ -197,13 +176,6 @@ public class GameStatus implements Serializable {
         this.cyberneticsCores = Math.max(0, cyberneticsCores);
     }
 
-    public void setStargates(int stargates) {
-        this.stargates = Math.max(0, stargates);
-    }
-
-    public void setVoidrays(int voidrays) {
-        this.voidrays = Math.max(0, voidrays);
-    }
 
     public void setSupplyUsed(int supplyUsed) {
         this.supplyUsed = Math.max(0, supplyUsed);
@@ -213,17 +185,14 @@ public class GameStatus implements Serializable {
         this.supplyCap = Math.max(0, supplyCap);
     }
 
-    public void setForge(int forge) {
-        this.forge = Math.max(0, forge);
-    }
-
-    public void setSentry(int sentry) {
-        this.sentry = Math.max(0, sentry);
-    }
 
     public void setAssimilator(int assimilator) {this.assimilator = Math.max(0, assimilator);}
 
     public void setTotalAssimilatorHarvesters(int totalAssimilatorHarvesters) {this.totalAssimilatorHarvesters = (Math.max(0, totalAssimilatorHarvesters));}
+
+    public void setZealot(int zealot) {this.zealot = Math.max(0, zealot);}
+    public void setStalker(int stalker) {this.stalker = Math.max(0, stalker);}
+    public void setSupplyDifferenceUsedCap(int supplyDifferenceUsedCap) {this.supplyDifferenceUsedCap = Math.max(0, supplyDifferenceUsedCap);}
 
     /**
      * Gibt eine String-Repräsentation des GameStatus-Objekts zurück.
@@ -238,19 +207,17 @@ public class GameStatus implements Serializable {
                 ", idleWorkers=" + idleWorkers +
                 ", minerals=" + minerals +
                 ", gas=" + gas +
-                ", photonCannons=" + photonCannons +
                 ", pylons=" + pylons +
                 ", nexus=" + nexus +
                 ", gateways=" + gateways +
                 ", cyberneticsCores=" + cyberneticsCores +
-                ", stargates=" + stargates +
-                ", voidrays=" + voidrays +
                 ", supplyUsed=" + supplyUsed +
                 ", supplyCap=" + supplyCap +
-                ", forge=" + forge +
-                ", sentry=" + sentry +
                 ", assimilator=" + assimilator +
                 ", totalAssimilatorHarvesters=" + totalAssimilatorHarvesters +
+                ", zealot=" + zealot +
+                ", stalker=" + stalker +
+                ", supplyDifferenceUsedCap=" + supplyDifferenceUsedCap +
                 '}';
     }
 
