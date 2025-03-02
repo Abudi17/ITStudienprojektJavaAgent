@@ -41,6 +41,8 @@ public class GameStatusProcessor {
         attributes.put("Zealot", validateAttribute(gameStatus.getZealot()));
         attributes.put("Stalker", validateAttribute(gameStatus.getStalker()));
         attributes.put("supplyDifferenceUsedCap", validateAttribute(gameStatus.getSupplyDifferenceUsedCap()));
+        attributes.put("NexusWorker", validateAttribute(gameStatus.getNexusWorker()));
+        attributes.put("NexusTrainingStatus", validateAttribute(gameStatus.isNexusTrainingStatus()));
 
         return attributes; // Rückgabe der Map mit Attributen und Werten
     }

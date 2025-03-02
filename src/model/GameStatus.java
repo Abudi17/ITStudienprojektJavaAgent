@@ -31,6 +31,8 @@ public class GameStatus implements Serializable {
     private int zealot;
     private int stalker;
     private int supplyDifferenceUsedCap;
+    private int nexusWorker;
+    private int nexusTrainingStatus;
 
     /**
      * Standardkonstruktor, der alle Werte auf ihre Standardwerte (0) setzt.
@@ -59,10 +61,12 @@ public class GameStatus implements Serializable {
      * @param zealot
      * @param stalker
      * @param supplyDifferenceUsedCap
+     * @param nexusWorker
+     * @param nexusTrainingStatus
      */
     public GameStatus(int iteration, int workers, int idleWorkers, int minerals, int gas, int pylons,
                       int nexus, int gateways, int cyberneticsCores, int supplyUsed, int supplyCap, int assimilator,
-                      int totalAssimilatorHarvesters, int zealot, int stalker, int supplyDifferenceUsedCap) {
+                      int totalAssimilatorHarvesters, int zealot, int stalker, int supplyDifferenceUsedCap, int nexusWorker, int nexusTrainingStatus) {
         this.iteration = iteration;
         this.workers = Math.max(0, workers); // Validierung: Keine negativen Werte
         this.idleWorkers = Math.max(0, idleWorkers);
@@ -79,6 +83,8 @@ public class GameStatus implements Serializable {
         this.zealot = Math.max(0, zealot);
         this.stalker = Math.max(0, stalker);
         this.supplyDifferenceUsedCap = Math.max(0, supplyDifferenceUsedCap);
+        this.nexusWorker = Math.max(0, nexusWorker);
+        this.nexusTrainingStatus = Math.max(0, nexusTrainingStatus);
     }
 
     // Getter-Methoden
@@ -136,6 +142,8 @@ public class GameStatus implements Serializable {
     public int getZealot() {return zealot;}
     public int getStalker() {return stalker;}
     public int getSupplyDifferenceUsedCap() {return supplyDifferenceUsedCap;}
+    public int getNexusWorker() {return nexusWorker;}
+    public int isNexusTrainingStatus() {return nexusTrainingStatus;}
 
     // Setter-Methoden mit Validierung (keine negativen Werte)
 
@@ -193,6 +201,8 @@ public class GameStatus implements Serializable {
     public void setZealot(int zealot) {this.zealot = Math.max(0, zealot);}
     public void setStalker(int stalker) {this.stalker = Math.max(0, stalker);}
     public void setSupplyDifferenceUsedCap(int supplyDifferenceUsedCap) {this.supplyDifferenceUsedCap = Math.max(0, supplyDifferenceUsedCap);}
+    public void setNexusWorker(int nexusWorker) {this.nexusWorker = Math.max(0, nexusWorker);}
+    public void setNexusTrainingStatus(int nexusTrainingStatus) {this.nexusTrainingStatus = nexusTrainingStatus;}
 
     /**
      * Gibt eine String-Repräsentation des GameStatus-Objekts zurück.
@@ -218,6 +228,8 @@ public class GameStatus implements Serializable {
                 ", zealot=" + zealot +
                 ", stalker=" + stalker +
                 ", supplyDifferenceUsedCap=" + supplyDifferenceUsedCap +
+                ", nexusWorker=" + nexusWorker +
+                ", nexusTrainingStatus=" + nexusTrainingStatus +
                 '}';
     }
 
