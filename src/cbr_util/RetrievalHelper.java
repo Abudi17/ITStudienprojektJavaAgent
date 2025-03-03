@@ -109,7 +109,7 @@ public class RetrievalHelper {
             return "build_Pylon";
         }
         // Fallnummer im Bereich 11 bis 20: Arbeiter werden erzeugt
-        else if (caseNumber == 7) {
+        else if (caseNumber == 7 || caseNumber == 21 || caseNumber ==22 || caseNumber == 23) {
             return "troup_Worker";
         }
         // Fallnummer im Bereich 21 bis 40: Gateway wird gebaut
@@ -129,38 +129,7 @@ public class RetrievalHelper {
             return "build_Stargate";
         }
         // Fallnummer im Bereich 101 bis 120: Schmiede wird gebaut
-        else if (caseNumber == 6) {
-            return "build_Forge";
-        }
-        // Fallnummer im Bereich 121 bis 130: Photonengeschütz zur Verteidigung
-        else if (caseNumber == 10) {
-            return "deff_PhotonCannon";
-        }
-        // Fallnummer im Bereich 131 bis 140: Voidray wird erzeugt
-        else if (caseNumber == 8) {
-            return "troup_Voidray";
-        }
-        // Fallnummer im Bereich 141 bis 150: Sentry wird erzeugt
-        else if (caseNumber == 9) {
-            return "troup_Sentry";
-        }
-        // Fallnummer im Bereich 151 bis 160: Verteidigung mit Sentrys
-        else if (caseNumber == 11) {
-            return "deff_Sentry";
-        }
-        // Fallnummer im Bereich 161 bis 170: Angriff mit Voidrays
-        else if (caseNumber == 12) {
-            return "attack_Voidray";
-        }
-        // Fallnummer im Bereich 171 bis 180: Angriff mit Sentrys
-        else if (caseNumber == 13) {
-            return "attack_Sentry";
-        }
-        // Fallnummer im Bereich 181 bis 190: Kombinierter Angriff mit Sentrys und Voidrays
-        else if (caseNumber == 14) {
-            return "attack_Sentry_Voidray";
-        }
-        else if (caseNumber == 15) {
+        else if (caseNumber == 15 || caseNumber == 12 || caseNumber == 13) {
             return "troup_Worker_Assimilator";
         }
         else if (caseNumber == 16) {
