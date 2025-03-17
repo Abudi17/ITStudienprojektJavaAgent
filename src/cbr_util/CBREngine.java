@@ -156,16 +156,27 @@ public class CBREngine {
      * @param queryAttributes Eine Map mit Attributnamen und zugehörigen Werten für die Abfrage
      * @return Eine Map der Top 5 Fälle (Fallname -> Kategorie)
      */
-    public Map<String, String> retrieveAndCategorizeCases(Map<String, String> queryAttributes) {
+    public Map<String, Pair<String, Double>> retrieveAndCategorizeCases(Map<String, String> queryAttributes) {
         // Rufe die Ergebnisse des Retrievals ab
         List<Pair<Instance, Similarity>> results = retrieveCases(queryAttributes);
 
         for (Pair<Instance, Similarity> result : results) {
-            System.out.println("Instance: " + result.getFirst() + ", Similarity: " + result.getSecond());
+            System.out.println("Instance: " + result.getFirst() + ", Similarity: " + result.getSecond().getValue());
         }
 
+        // Kategorisierte Fälle abrufen
+        Map<String, String> categorizedCases = RetrievalHelper.getCategorizedTopCases(results);
 
-        // Übergib die Ergebnisse an den RetrievalHelper zur Kategorisierung
-        return RetrievalHelper.getCategorizedTopCases(results);
+        // Map mit Ähnlichkeitswerten erstellen
+        Map<String, Pair<String, Double>> casesWithSimilarity = new HashMap<>();
+        for (Pair<Instance, Similarity> result : results) {
+            String caseName = result.getFirst().getName();
+            double similarityValue = result.getSecond().getValue();
+            String category = categorizedCases.getOrDefault(caseName, "Unbekannt");
+
+            casesWithSimilarity.put(caseName, new Pair<>(category, similarityValue));
+        }
+
+        return casesWithSimilarity;
     }
 }

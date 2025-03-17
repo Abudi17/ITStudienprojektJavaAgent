@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import cbr_util.CBREngine;
 import com.google.gson.*;
+import de.dfki.mycbr.util.Pair;
 import model.GameStatus;
 import model.Request;
 import model.Response;
@@ -79,16 +80,23 @@ public class Main {
                     GameStatus gameStatus = request.gameStatus();
                     Map<String, String> queryAttributes = GameStatusProcessor.extractAttributes(gameStatus);
 
-                    // Fälle anhand der Attribut-Werte abrufen und kategorisieren
-                    Map<String, String> categorizedCases = cbrEngine.retrieveAndCategorizeCases(queryAttributes);
+                    // Fälle mit Ähnlichkeitswerten abrufen
+                    Map<String, Pair<String, Double>> categorizedCasesWithSimilarity = cbrEngine.retrieveAndCategorizeCases(queryAttributes);
 
-                    // Dummy-Ähnlichkeitswerte (als Beispiel; diese sollten durch ein echtes Berechnungsmodul ersetzt werden)
-                    Map<String, Double> similarityResults = categorizedCases.keySet().stream()
+                    System.out.println("INFO: Abgerufene Fälle mit Ähnlichkeit: " + categorizedCasesWithSimilarity);
+
+                    // Erstelle die Antwort mit  Ähnlichkeitswerten
+                    Map<String, Double> similarityResults = categorizedCasesWithSimilarity.entrySet().stream()
                             .collect(Collectors.toMap(
-                                    caseName -> caseName, // Fallname
-                                    _ -> Math.random() // Zufallswert als Ähnlichkeitswert
+                                    Map.Entry::getKey, // Fallname
+                                    entry -> entry.getValue().getSecond() // Ähnlichkeitswert
                             ));
-                    System.out.println("Das sind die Kategorisierten Fälle: " + categorizedCases);
+
+                    Map<String, String> categorizedCases = categorizedCasesWithSimilarity.entrySet().stream()
+                            .collect(Collectors.toMap(
+                                    Map.Entry::getKey,
+                                    entry -> entry.getValue().getFirst()
+                            ));
 
                     // Formatieren und Senden der kombinierten Antwort
                     Response responseHandler = new Response(out);

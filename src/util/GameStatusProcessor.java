@@ -32,17 +32,15 @@ public class GameStatusProcessor {
         attributes.put("Nexus", validateAttribute(gameStatus.getNexus())); // Anzahl der Nexus-Einheiten
         attributes.put("Gateways", validateAttribute(gameStatus.getGateways())); // Anzahl der Gateways
         attributes.put("CyberneticsCores", validateAttribute(gameStatus.getCyberneticsCores())); // Anzahl der Cybernetics Cores
-
         attributes.put("SupplyUsed", validateAttribute(gameStatus.getSupplyUsed())); // Genutzte Versorgungseinheiten
         attributes.put("SupplyCap", validateAttribute(gameStatus.getSupplyCap())); // Maximale Versorgungseinheiten
-
         attributes.put("Assimilator", validateAttribute(gameStatus.getAssimilator()));// Anzahl der Assimilator
-        attributes.put("totalAssimilatorHarvesters", validateAttribute(gameStatus.getTotalAssimilatorHarvesters()));
-        attributes.put("Zealot", validateAttribute(gameStatus.getZealot()));
-        attributes.put("Stalker", validateAttribute(gameStatus.getStalker()));
-        attributes.put("supplyDifferenceUsedCap", validateAttribute(gameStatus.getSupplyDifferenceUsedCap()));
-        attributes.put("NexusWorker", validateAttribute(gameStatus.getNexusWorker()));
-        attributes.put("NexusTrainingStatus", validateAttribute(gameStatus.isNexusTrainingStatus()));
+        attributes.put("totalAssimilatorHarvesters", validateAttribute(gameStatus.getTotalAssimilatorHarvesters()));// Anzahl der Assimilator Arbeiter
+        attributes.put("Zealot", validateAttribute(gameStatus.getZealot()));// Anzahl der Zealots
+        attributes.put("Stalker", validateAttribute(gameStatus.getStalker()));// Anzahl der Stalker
+        attributes.put("supplyDifferenceUsedCap", validateAttribute(gameStatus.getSupplyDifferenceUsedCap()));// verfügbare Ressourcen
+        attributes.put("NexusWorker", validateAttribute(gameStatus.getNexusWorker()));// Anzahl Nexus Arbeiter
+        attributes.put("NexusTrainingStatus", validateAttribute(gameStatus.isNexusTrainingStatus()));// Status ob im Nexus Arbeiter ausgebildet werden
 
         return attributes; // Rückgabe der Map mit Attributen und Werten
     }
