@@ -37,7 +37,7 @@ public class CBREngine {
 
     /**
      * Pfad zur myCBR-Projektdatei
-     */ // ICH PASSE DAS JETZT AN EIG: WAR ES VORHER DAS HIER VON KLAUSI "C:\\Users\\abdul\\Desktop\\IT-Studienprojekt\\StarCraft2.prj"
+     */
     private static final String PROJECT_PATH = "C:\\Users\\abdul\\Desktop\\IT-Studienprojekt\\StarCraft2.prj";
 
     /**

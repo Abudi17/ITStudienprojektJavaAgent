@@ -85,7 +85,7 @@ public class Main {
 
                     System.out.println("INFO: Abgerufene Fälle mit Ähnlichkeit: " + categorizedCasesWithSimilarity);
 
-                    // Erstelle die Antwort mit  Ähnlichkeitswerten
+                    // Erstelle die Antwort mit Ähnlichkeitswerten
                     Map<String, Double> similarityResults = categorizedCasesWithSimilarity.entrySet().stream()
                             .collect(Collectors.toMap(
                                     Map.Entry::getKey, // Fallname
